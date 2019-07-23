@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="iona.mapper.CrewMapper">
+
+	<cache/>
+
+	<resultMap id="crewResultMap" type="crew">
+		<id property="id" column="id" />
+		<result property="crewName" column="crewName"/>
+		<result property="phoneNum" column="phoneNum"/>
+		<result property="mail" column="mail"/>
+		<result property="crewMessage" column="crewMessage"/>
+		<result property="avatarUrl" column="avatarUrl"/>
+		<result property="passwordMd5" column="passwordMd5"/>
+		<result property="lastOfflineTime" column="lastOfflineTime"/>
+		<result property="createTime" column="createTime"/>
+		<result property="filed1" column="filed1"/>
+	</resultMap>
+
+	<select id="selects" resultMap="crewResultMap" parameterType="map">
+		select
+		id,
+		crewName,
+		phoneNum,
+		mail,
+		crewMessage,
+		avatarUrl,
+		passwordMd5,
+		lastOfflineTime,
+		createTime,
+		filed1
+		from CREW
+		<if test="item != null">
+			<trim prefix="WHERE" prefixOverrides="AND ">
+				<if test="item.id > 0">
+					AND id = #{item.id,jdbcType=NUMERIC}
+				</if>
+				<if test="item.crewName != null and item.crewName != ''">
+					AND crewName = #{item.crewName,jdbcType=VARCHAR}
+				</if>
+				<if test="item.phoneNum != null and item.phoneNum != ''">
+					AND phoneNum = #{item.phoneNum,jdbcType=VARCHAR}
+				</if>
+				<if test="item.mail != null and item.mail != ''">
+					AND mail = #{item.mail,jdbcType=VARCHAR}
+				</if>
+				<if test="item.crewMessage != null and item.crewMessage != ''">
+					AND crewMessage = #{item.crewMessage,jdbcType=VARCHAR}
+				</if>
+				<if test="item.avatarUrl != null and item.avatarUrl != ''">
+					AND avatarUrl = #{item.avatarUrl,jdbcType=VARCHAR}
+				</if>
+				<if test="item.passwordMd5 != null and item.passwordMd5 != ''">
+					AND passwordMd5 = #{item.passwordMd5,jdbcType=VARCHAR}
+				</if>
+				<if test="item.lastOfflineTime != null and item.lastOfflineTime != ''">
+					AND lastOfflineTime = #{item.lastOfflineTime,jdbcType=VARCHAR}
+				</if>
+				<if test="item.createTime != null and item.createTime != ''">
+					AND createTime = #{item.createTime,jdbcType=VARCHAR}
+				</if>
+				<if test="item.filed1 != null and item.filed1 != ''">
+					AND filed1 = #{item.filed1,jdbcType=VARCHAR}
+				</if>
+			</trim>
+		</if>
+
+	</select>
+
+	<insert id="inserts" useGeneratedKeys="true" keyProperty="id">
+		insert into CREW
+		(
+		crewName,
+		phoneNum,
+		mail,
+		crewMessage,
+		avatarUrl,
+		passwordMd5,
+		lastOfflineTime,
+		createTime,
+		filed1
+		)
+		values
+		<foreach item="item" collection="list" separator=",">
+		   (
+		    	#{item.crewName,jdbcType=VARCHAR},
+		    	#{item.phoneNum,jdbcType=VARCHAR},
+		    	#{item.mail,jdbcType=VARCHAR},
+		    	#{item.crewMessage,jdbcType=VARCHAR},
+		    	#{item.avatarUrl,jdbcType=VARCHAR},
+		    	#{item.passwordMd5,jdbcType=VARCHAR},
+		    	#{item.lastOfflineTime,jdbcType=VARCHAR},
+		    	#{item.createTime,jdbcType=VARCHAR},
+		    	#{item.filed1,jdbcType=VARCHAR}
+			)
+		</foreach>
+	</insert>
+
+	<delete id="delete">
+		delete from CREW where id = #{id}
+	</delete>
+
+	<delete id="deletes">
+		delete from CREW where id in
+		<foreach collection="ids" item="id" open="(" close=")" separator=",">
+			#{id}
+		</foreach>
+	</delete>
+
+	<update id="update" >
+		update CREW set
+		<trim prefix="" suffixOverrides=",">
+			<if test="crewName != null and crewName != ''">
+				crewName = #{crewName,jdbcType=VARCHAR},
+			</if>
+			<if test="phoneNum != null and phoneNum != ''">
+				phoneNum = #{phoneNum,jdbcType=VARCHAR},
+			</if>
+			<if test="mail != null and mail != ''">
+				mail = #{mail,jdbcType=VARCHAR},
+			</if>
+			<if test="crewMessage != null and crewMessage != ''">
+				crewMessage = #{crewMessage,jdbcType=VARCHAR},
+			</if>
+			<if test="avatarUrl != null and avatarUrl != ''">
+				avatarUrl = #{avatarUrl,jdbcType=VARCHAR},
+			</if>
+			<if test="passwordMd5 != null and passwordMd5 != ''">
+				passwordMd5 = #{passwordMd5,jdbcType=VARCHAR},
+			</if>
+			<if test="lastOfflineTime != null and lastOfflineTime != ''">
+				lastOfflineTime = #{lastOfflineTime,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null and createTime != ''">
+				createTime = #{createTime,jdbcType=VARCHAR},
+			</if>
+			<if test="filed1 != null and filed1 != ''">
+				filed1 = #{filed1,jdbcType=VARCHAR},
+			</if>
+		</trim>
+		where id = #{id}
+	</update>
+
+	<!-- TODO 这种row-by-row方式以后改成更高效的 -->
+	<update id="updates">
+		<foreach collection="items" item="item" open="" close="" separator=";">
+			update CREW set
+			<trim prefix="" suffixOverrides=",">
+				<if test="item.crewName != null and item.crewName != ''">
+					crewName = #{item.crewName,jdbcType=VARCHAR},
+				</if>
+				<if test="item.phoneNum != null and item.phoneNum != ''">
+					phoneNum = #{item.phoneNum,jdbcType=VARCHAR},
+				</if>
+				<if test="item.mail != null and item.mail != ''">
+					mail = #{item.mail,jdbcType=VARCHAR},
+				</if>
+				<if test="item.crewMessage != null and item.crewMessage != ''">
+					crewMessage = #{item.crewMessage,jdbcType=VARCHAR},
+				</if>
+				<if test="item.avatarUrl != null and item.avatarUrl != ''">
+					avatarUrl = #{item.avatarUrl,jdbcType=VARCHAR},
+				</if>
+				<if test="item.passwordMd5 != null and item.passwordMd5 != ''">
+					passwordMd5 = #{item.passwordMd5,jdbcType=VARCHAR},
+				</if>
+				<if test="item.lastOfflineTime != null and item.lastOfflineTime != ''">
+					lastOfflineTime = #{item.lastOfflineTime,jdbcType=VARCHAR},
+				</if>
+				<if test="item.createTime != null and item.createTime != ''">
+					createTime = #{item.createTime,jdbcType=VARCHAR},
+				</if>
+				<if test="item.filed1 != null and item.filed1 != ''">
+					filed1 = #{item.filed1,jdbcType=VARCHAR},
+				</if>
+			</trim>
+			where id = ${item.id}
+		</foreach>
+	</update>
+
+</mapper>
+
+
+
+

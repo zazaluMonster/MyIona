@@ -9,23 +9,25 @@ public class IonaLogger {
 
     private static final Logger logger = LoggerFactory.getLogger(IonaLogger.class);
 
+    private static String IONA_LOGGER_HEADER = "Iona: ";
+
     public static void trace(String msg){
-        logger.trace(msg);
+        logger.trace(IONA_LOGGER_HEADER + msg);
     }
 
     public static void debug(String msg){
-        logger.debug(msg);
+        logger.debug(IONA_LOGGER_HEADER + msg);
     }
 
     public static void info(String msg){
-        logger.info(msg);
+        logger.info(IONA_LOGGER_HEADER + msg);
     }
 
     public static void warn(String msg){
-        logger.warn(msg);
+        logger.warn(IONA_LOGGER_HEADER + msg);
     }
 
     public static void error(String msg){
-        logger.error(msg);
+        logger.error(IONA_LOGGER_HEADER + msg);
     }
 }

@@ -1,0 +1,22 @@
+<config
+xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+xmlns='http://www.ehcache.org/v3'
+xmlns:jsr107='http://www.ehcache.org/v3/jsr107'>
+
+<service>
+	<jsr107:defaults enable-statistics="true"/>
+</service>
+
+<cache alias="myIonaCache">
+	<key-type>java.lang.String</key-type>
+	<value-type>java.lang.String</value-type>
+	<expiry>
+		<ttl unit="minutes">60</ttl>
+	</expiry>
+
+	<resources>
+		<heap unit="entries">2000</heap>
+		<offheap unit="MB">100</offheap>
+	</resources>
+</cache>
+</config>
