@@ -1,6 +1,5 @@
 package iona.commandLineRunner;
 
-import iona.cache.EhcacheManager;
 import iona.cache.IonaCache;
 import iona.logger.IonaLogger;
 import org.springframework.beans.factory.annotation.Autowired;

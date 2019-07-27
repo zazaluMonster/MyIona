@@ -25,7 +25,5 @@ create unique index CREW_crewName_uindex
 create unique index CREW_phoneNum_uindex
     on CREW (phoneNum);
 
-
 --
-
 

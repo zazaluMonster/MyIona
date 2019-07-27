@@ -3,6 +3,8 @@ package iona.service.impl;
 import iona.cache.EhcacheManager;
 import iona.cache.IonaCache;
 import iona.dao.ICrewDao;
+import iona.exception.IonaException;
+import iona.logger.IonaLogger;
 import iona.pojo.Crew;
 import iona.service.ICrewService;
 import iona.util.DateUtil;
@@ -83,6 +85,64 @@ public class CrewService implements ICrewService {
         crews.add(crew);
         inserts(crews);
         return crews.get(0).getId();
+    }
+
+    @Override
+    public Crew getByPhone(String phone) throws IonaException {
+        Crew crew = new Crew();
+        crew.setPhoneNum(phone);
+        Map<String,Object> condition = new HashMap<>();
+        condition.put("item",crew);
+        List<Crew> crews =  crewDao.selects(condition);
+        if(crew == null || crews.size() <= 0){
+            return null;
+        }else if(crews.size() > 1){
+            IonaLogger.info("检测到数据库数据关系异常,同一个手机号查询到了多个用户,此手机号为:" + phone);
+            throw new IonaException();
+        }else{
+            return crews.get(0);
+        }
+    }
+
+    @Override
+    public Crew getByMail(String mail) throws IonaException {
+        Crew crew = new Crew();
+        crew.setMail(mail);
+        Map<String,Object> condition = new HashMap<>();
+        condition.put("item",crew);
+        List<Crew> crews =  crewDao.selects(condition);
+        if(crew == null || crews.size() <= 0){
+            return null;
+        }else if(crews.size() > 1){
+            IonaLogger.info("检测到数据库数据关系异常,同一个邮箱查询到了多个用户,此邮箱为:" + mail);
+            throw new IonaException();
+        }else{
+            return crews.get(0);
+        }
+    }
+
+    @Override
+    public Crew getByCrewName(String crewName) throws IonaException {
+        Crew crew = new Crew();
+        crew.setCrewName(crewName);
+        Map<String,Object> condition = new HashMap<>();
+        condition.put("item",crew);
+        List<Crew> crews =  crewDao.selects(condition);
+        if(crew == null || crews.size() <= 0){
+            return null;
+        }else if(crews.size() > 1){
+            IonaLogger.info("检测到数据库数据关系异常,同一个用户名查询到了多个用户,此用户名为:" + crewName);
+            throw new IonaException();
+        }else{
+            return crews.get(0);
+        }
+    }
+
+    @Override
+    public void updateAvatar(String crewName,String fileName) throws IonaException {
+        Crew crew = getByCrewName(crewName);
+        crew.setAvatarUrl(fileName);
+        update(crew);
     }
 
     @Override

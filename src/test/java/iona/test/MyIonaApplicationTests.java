@@ -1,7 +1,6 @@
 package iona.test;
 
 import iona.cache.IonaCache;
-import iona.logger.IonaLogger;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

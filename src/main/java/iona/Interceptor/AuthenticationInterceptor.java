@@ -58,7 +58,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
         if(StringUtils.isEmpty(token) ||
                 StringUtils.isEmpty(cacheToken) ||
                 !cacheToken.equals(token)){
-            BaseModelView baseModelView = new BaseModelView(MyHttpStatus.NETWORK_AUTHENTICATION_REQUIRED,"","");
+            BaseModelView baseModelView = new BaseModelView(MyHttpStatus.NETWORK_AUTHENTICATION_REQUIRED);
             ObjectMapper objectMapper = new ObjectMapper()
                     .configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true);
             response.setHeader("Access-Control-Allow-Origin","*");

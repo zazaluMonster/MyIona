@@ -2,11 +2,23 @@ package iona.service;
 
 
 import iona.exception.FirstLoginException;
+import iona.exception.IonaException;
 import iona.pojo.Crew;
 
 public interface ICrewService extends BaseService<Crew> {
-    public boolean auth(Crew crew);
-    public String tokenResolve(Crew crew, boolean doForce) throws FirstLoginException;
-    public boolean isCrewAlreadyExist(String crewName, String phoneNum, String mail);
-    public int register(Crew crew);
+    boolean auth(Crew crew);
+
+    String tokenResolve(Crew crew, boolean doForce) throws FirstLoginException;
+
+    boolean isCrewAlreadyExist(String crewName, String phoneNum, String mail);
+
+    int register(Crew crew);
+
+    Crew getByPhone(String phone) throws IonaException;
+
+    Crew getByMail(String mail) throws IonaException;
+
+    Crew getByCrewName(String crewName) throws IonaException;
+
+    void updateAvatar(String crewName,String fileName) throws IonaException;
 }

@@ -8,16 +8,10 @@ import java.io.Serializable;
 public class BaseModelView implements Serializable {
     private MyHttpStatus status;
     private String msg;
-    private String errMsg = "";
-
-    public BaseModelView(MyHttpStatus status, String msg, String errMsg) {
-        this.status = status;
-        this.msg = msg;
-        this.errMsg = errMsg;
-    }
 
     public BaseModelView(MyHttpStatus status) {
         this.status = status;
+        this.msg = status.getReasonPhrase();
     }
 
     public MyHttpStatus getStatus() {
@@ -36,11 +30,4 @@ public class BaseModelView implements Serializable {
         this.msg = msg;
     }
 
-    public String getErrMsg() {
-        return errMsg;
-    }
-
-    public void setErrMsg(String errMsg) {
-        this.errMsg = errMsg;
-    }
 }
