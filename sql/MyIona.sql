@@ -27,3 +27,21 @@ create unique index CREW_phoneNum_uindex
 
 --
 
+create table MESSAGE
+(
+    id int auto_increment,
+    html VARCHAR(1000) not null,
+    createTime VARCHAR(16) not null,
+    creator int not null,
+    constraint MESSAGE_pk
+        primary key (id)
+)
+    comment '伊文表';
+
+create unique index MESSAGE_createTime_uindex
+    on MESSAGE (createTime);
+
+create unique index MESSAGE_creator_uindex
+    on MESSAGE (creator);
+
+

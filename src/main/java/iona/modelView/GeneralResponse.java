@@ -15,6 +15,8 @@ public class GeneralResponse extends BaseModelView {
         super(status);
     }
 
+
+
     public String getVerifyCode() {
         return verifyCode;
     }

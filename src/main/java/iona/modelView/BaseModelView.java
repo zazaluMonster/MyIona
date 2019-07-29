@@ -14,6 +14,11 @@ public class BaseModelView implements Serializable {
         this.msg = status.getReasonPhrase();
     }
 
+    public BaseModelView(MyHttpStatus status,String msg) {
+        this.status = status;
+        this.msg = msg;
+    }
+
     public MyHttpStatus getStatus() {
         return status;
     }

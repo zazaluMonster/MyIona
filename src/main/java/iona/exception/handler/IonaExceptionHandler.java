@@ -1,6 +1,7 @@
 package iona.exception.handler;
 
 import iona.exception.IonaException;
+import iona.modelView.BaseModelView;
 import iona.modelView.GeneralResponse;
 import iona.util.MyHttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -20,8 +21,8 @@ public class IonaExceptionHandler {
      */
     @ExceptionHandler(IonaException.class)
     @ResponseBody
-    public GeneralResponse errorHandler(Exception e) {
-        return new GeneralResponse(MyHttpStatus.ERROR);
+    public BaseModelView errorHandler(Exception e) {
+        return new BaseModelView(MyHttpStatus.ERROR,e.getMessage());
     }
 
     /**

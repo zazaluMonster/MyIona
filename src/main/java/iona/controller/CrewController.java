@@ -18,6 +18,7 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
@@ -127,7 +128,7 @@ public class CrewController {
      * @param crew 用户数据
      */
     @RequestMapping(value = "/update", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public CrewResponse update(@RequestBody Crew crew) {
+    public CrewResponse update(@RequestBody Crew crew) throws IonaException {
         MyHttpStatus status = MyHttpStatus.OK;
 
         crewService.update(crew);
@@ -184,25 +185,29 @@ public class CrewController {
      * 上传头像
      */
     @RequestMapping(value = "/uploadAvatar", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public CrewResponse uploadAvatar(@RequestBody CrewRequest crewRequest) throws IonaException, IOException {
+    public CrewResponse uploadAvatar(@RequestBody CrewRequest crewRequest) throws IonaException {
         MyHttpStatus status = MyHttpStatus.OK;
         MyHttpStatus noCrewNameError = MyHttpStatus.NO_CREWNAME_ERROR;
 
-        if (StringUtils.isEmpty(crewRequest.getCrewName())) {
+        String base64 = crewRequest.getAvatarImgCode();
+        String crewName = crewRequest.getCrewName();
+
+        //检查数据完整性
+        if (StringUtils.isEmpty(crewName)) {
             return new CrewResponse(noCrewNameError);
         }
-
-        String base64 = crewRequest.getAvatarImgCode();
         IonaBase64Util imgMeta = new IonaBase64Util(base64);
-        String fileName = AVATAR_NAME + "_" + crewRequest.getCrewName() + imgMeta.getSuffix();
+
+        //生成文件名和路径
+        String fileName = AVATAR_NAME + "_" + crewName + imgMeta.getSuffix();
         String file = AVATAR_PATH + File.separator + fileName;
 
         //异步保存图片到本地
-        SaveFileRunner saveFileRunner = (SaveFileRunner) applicationContext.getBean("saveFileRunner",file,imgMeta.getData());
+        SaveFileRunner saveFileRunner = applicationContext.getBean(SaveFileRunner.class, file, imgMeta.getData());
         runnerQueue.addNewRunner(saveFileRunner);
 
         //数据库保存路径
-        crewService.updateAvatar(crewRequest.getCrewName(),fileName);
+        crewService.updateAvatar(crewName, fileName);
 
         CrewResponse crewResponse = new CrewResponse(status);
         crewResponse.setAvatarURL(fileName);

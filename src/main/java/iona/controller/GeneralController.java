@@ -39,7 +39,7 @@ public class GeneralController {
         String verifyCode = MyStringUtil.getVerifyCode();
 
         //异步记录验证码至数据库
-        VerifyCodeLogRunner verifyCodeLogRunner = (VerifyCodeLogRunner) applicationContext.getBean("verifyCodeLogRunner",verifyCode,DateUtil.getTimeString(new Date()),requestModel.getPhoneNum());
+        VerifyCodeLogRunner verifyCodeLogRunner = applicationContext.getBean(VerifyCodeLogRunner.class ,verifyCode,DateUtil.getTimeString(new Date()),requestModel.getPhoneNum());
         runnerQueue.addNewRunner(verifyCodeLogRunner);
         return new GeneralResponse(MyHttpStatus.OK,verifyCode);
     }

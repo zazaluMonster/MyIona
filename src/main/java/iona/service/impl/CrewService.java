@@ -11,6 +11,7 @@ import iona.util.DateUtil;
 import iona.util.TokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import java.util.*;
 
@@ -162,8 +163,28 @@ public class CrewService implements ICrewService {
     }
 
     @Override
-    public void update(Crew item) {
-        crewDao.update(item);
+    public void update(Crew newCrew) throws IonaException {
+        //验证要修改的数据
+        if(newCrew.getId() <= 0){
+            throw new IonaException("修改异常: id违规");
+        }
+
+        Crew oldCrew = getByCrewName(newCrew.getCrewName());
+        if(oldCrew.getId()!=newCrew.getId()){
+            throw new IonaException("昵称已注册");
+        }
+
+        oldCrew = getByPhone(newCrew.getPhoneNum());
+        if(oldCrew.getId()!=newCrew.getId()){
+            throw new IonaException("手机号已注册");
+        }
+
+        oldCrew = getByMail(newCrew.getMail());
+        if(oldCrew.getId()!=newCrew.getId()){
+            throw new IonaException("邮箱已注册");
+        }
+
+        crewDao.update(newCrew);
     }
 
     @Override

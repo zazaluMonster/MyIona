@@ -7,6 +7,6 @@ public class IonaException extends Exception {
     }
 
     public IonaException(String message) {
-        super("Iona出现了异常: " + message);
+        super(message);
     }
 }
