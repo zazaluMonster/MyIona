@@ -20,5 +20,7 @@ public interface ICrewService extends BaseService<Crew> {
 
     Crew getByCrewName(String crewName) throws IonaException;
 
+    Crew getById(int id) throws IonaException;
+
     void updateAvatar(String crewName,String fileName) throws IonaException;
 }

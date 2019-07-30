@@ -1,6 +1,5 @@
 package iona.service.impl;
 
-import iona.cache.EhcacheManager;
 import iona.cache.IonaCache;
 import iona.dao.ICrewDao;
 import iona.exception.IonaException;
@@ -11,7 +10,6 @@ import iona.util.DateUtil;
 import iona.util.TokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 
 import java.util.*;
 
@@ -95,7 +93,7 @@ public class CrewService implements ICrewService {
         Map<String,Object> condition = new HashMap<>();
         condition.put("item",crew);
         List<Crew> crews =  crewDao.selects(condition);
-        if(crew == null || crews.size() <= 0){
+        if(crews == null || crews.size() <= 0){
             return null;
         }else if(crews.size() > 1){
             IonaLogger.info("检测到数据库数据关系异常,同一个手机号查询到了多个用户,此手机号为:" + phone);
@@ -112,7 +110,7 @@ public class CrewService implements ICrewService {
         Map<String,Object> condition = new HashMap<>();
         condition.put("item",crew);
         List<Crew> crews =  crewDao.selects(condition);
-        if(crew == null || crews.size() <= 0){
+        if(crews == null || crews.size() <= 0){
             return null;
         }else if(crews.size() > 1){
             IonaLogger.info("检测到数据库数据关系异常,同一个邮箱查询到了多个用户,此邮箱为:" + mail);
@@ -129,10 +127,27 @@ public class CrewService implements ICrewService {
         Map<String,Object> condition = new HashMap<>();
         condition.put("item",crew);
         List<Crew> crews =  crewDao.selects(condition);
-        if(crew == null || crews.size() <= 0){
+        if(crews == null || crews.size() <= 0){
             return null;
         }else if(crews.size() > 1){
             IonaLogger.info("检测到数据库数据关系异常,同一个用户名查询到了多个用户,此用户名为:" + crewName);
+            throw new IonaException();
+        }else{
+            return crews.get(0);
+        }
+    }
+
+    @Override
+    public Crew getById(int id) throws IonaException {
+        Crew crew = new Crew();
+        crew.setId(id);
+        Map<String,Object> condition = new HashMap<>();
+        condition.put("item",crew);
+        List<Crew> crews =  crewDao.selects(condition);
+        if(crews == null || crews.size() <= 0){
+            return null;
+        }else if(crews.size() > 1){
+            IonaLogger.info("检测到数据库数据关系异常,同一个用户id查询到了多个用户,此用户id为:" + id);
             throw new IonaException();
         }else{
             return crews.get(0);

@@ -88,7 +88,7 @@ public class CrewController {
     }
 
     /**
-     * 根据用户名获取单个用户数据
+     * 根据用户数据获取单个用户数据
      */
     @RequestMapping(value = "/getCrew", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     public CrewResponse getCrew(@RequestBody Crew crew) throws IonaException {
@@ -96,15 +96,17 @@ public class CrewController {
         MyHttpStatus errorStatus = MyHttpStatus.REQUEST_DATA_EMPTY;
         Crew result;
 
-        IonaLogger.info(CrewController.class.getResource("/").getPath());
-
-        if (StringUtils.isEmpty(crew.getCrewName())) {
-            return new CrewResponse(errorStatus);
-        } else {
+        if (!StringUtils.isEmpty(crew.getCrewName())) {
             result = crewService.getByCrewName(crew.getCrewName());
+            return new CrewResponse(status, result);
         }
 
-        return new CrewResponse(status, result);
+        if(crew.getId() > 0){
+            result = crewService.getById(crew.getId());
+            return new CrewResponse(status, result);
+        }
+
+        return new CrewResponse(errorStatus);
     }
 
 

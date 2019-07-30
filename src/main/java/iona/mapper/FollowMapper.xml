@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="iona.mapper.FollowMapper">
+
+	<cache/>
+
+	<resultMap id="followResultMap" type="follow">
+		<id property="id" column="id" />
+		<result property="followerId" column="followerId"/>
+		<result property="followerName" column="followerName"/>
+		<result property="followingId" column="followingId"/>
+		<result property="followingName" column="followingName"/>
+		<result property="followTime" column="followTime"/>
+	</resultMap>
+
+	<select id="selects" resultMap="followResultMap" parameterType="map">
+		select
+		id,
+		followerId,
+		followerName,
+		followingId,
+		followingName,
+		followTime		
+		from FOLLOW
+		<if test="item != null">
+			<trim prefix="WHERE" prefixOverrides="AND ">
+				<if test="item.id > 0">
+					AND id = #{item.id,jdbcType=NUMERIC}
+				</if>
+				<if test="item.followerId != null">
+					AND followerId = #{item.followerId,jdbcType=NUMERIC}
+				</if>
+				<if test="item.followerName != null and item.followerName != ''">
+					AND followerName = #{item.followerName,jdbcType=VARCHAR}
+				</if>
+				<if test="item.followingId != null">
+					AND followingId = #{item.followingId,jdbcType=NUMERIC}
+				</if>
+				<if test="item.followingName != null and item.followingName != ''">
+					AND followingName = #{item.followingName,jdbcType=VARCHAR}
+				</if>
+				<if test="item.followTime != null">
+					AND followTime = #{item.followTime,jdbcType=NUMERIC}
+				</if>
+			</trim>
+		</if>
+	</select>
+
+	<insert id="inserts" useGeneratedKeys="true" keyProperty="id">
+		insert into FOLLOW
+		(
+		followerId,
+		followerName,
+		followingId,
+		followingName,
+		followTime
+		)
+		values
+		<foreach item="item" collection="list" separator=",">
+		   (
+		    	#{item.followerId,jdbcType=NUMERIC},
+		    	#{item.followerName,jdbcType=VARCHAR},
+		    	#{item.followingId,jdbcType=NUMERIC},
+		    	#{item.followingName,jdbcType=VARCHAR},
+		    	#{item.followTime,jdbcType=VARCHAR}
+			)
+		</foreach>
+	</insert>
+
+	<delete id="delete">
+		delete from FOLLOW where id = #{id}
+	</delete>
+
+	<delete id="deletes">
+		delete from FOLLOW where id in
+		<foreach collection="ids" item="id" open="(" close=")" separator=",">
+			#{id}
+		</foreach>
+	</delete>
+
+	<update id="update" >
+		update FOLLOW set
+		<trim prefix="" suffixOverrides=",">
+			<if test="followerId != null">
+				followerId = #{followerId,jdbcType=NUMERIC},
+			</if>
+			<if test="followerName != null and followerName != ''">
+				followerName = #{followerName,jdbcType=VARCHAR},
+			</if>
+			<if test="followingId != null">
+				followingId = #{followingId,jdbcType=NUMERIC},
+			</if>
+			<if test="followingName != null and followingName != ''">
+				followingName = #{followingName,jdbcType=VARCHAR},
+			</if>
+			<if test="followTime != null and followTime != ''">
+				followTime = #{followTime,jdbcType=VARCHAR},
+			</if>
+		</trim>
+		where id = #{id}
+	</update>
+
+	<!-- TODO 这种row-by-row方式以后改成更高效的 -->
+	<update id="updates">
+		<foreach collection="items" item="item" open="" close="" separator=";">
+			update FOLLOW set
+			<trim prefix="" suffixOverrides=",">
+				<if test="item.followerId != null">
+					followerId = #{item.followerId,jdbcType=NUMERIC},
+				</if>
+				<if test="item.followerName != null and item.followerName != ''">
+					followerName = #{item.followerName,jdbcType=VARCHAR},
+				</if>
+				<if test="item.followingId != null">
+					followingId = #{item.followingId,jdbcType=NUMERIC},
+				</if>
+				<if test="item.followingName != null and item.followingName != ''">
+					followingName = #{item.followingName,jdbcType=VARCHAR},
+				</if>
+				<if test="item.followTime != null and item.followTime != ''">
+					followTime = #{item.followTime,jdbcType=VARCHAR},
+				</if>
+			</trim>
+			where id = ${item.id}
+		</foreach>
+	</update>
+
+</mapper>
+
+
+
+

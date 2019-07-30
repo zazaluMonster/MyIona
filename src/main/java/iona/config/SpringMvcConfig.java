@@ -1,21 +1,23 @@
 package iona.config;
 
 import iona.Interceptor.AuthenticationInterceptor;
-import iona.async.asyncRunner.VerifyCodeLogRunner;
+import iona.cache.IonaCache;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Scope;
 import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.config.annotation.*;
 
 @Configuration
 @EnableScheduling
 @EnableCaching
 public class SpringMvcConfig implements WebMvcConfigurer {
+
+
+    @Bean
+    public AuthenticationInterceptor authenticationInterceptor(){
+        return new AuthenticationInterceptor();
+    }
 
     /**
      * 跨域请求
@@ -35,8 +37,8 @@ public class SpringMvcConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         //会话管理拦截器
-        registry.addInterceptor(new AuthenticationInterceptor())
-                .addPathPatterns("/MyIona/**")
+        registry.addInterceptor(authenticationInterceptor())
+                .addPathPatterns("/**")
                 .excludePathPatterns(
                         "/crew/login",
                         "/crew/register",

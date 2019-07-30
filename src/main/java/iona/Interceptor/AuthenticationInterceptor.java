@@ -16,11 +16,11 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.net.URLDecoder;
 
 /**
  *  SpringMvc拦截器，
  */
-@Component
 public class AuthenticationInterceptor implements HandlerInterceptor {
 
     @Autowired
@@ -47,11 +47,11 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
     }
 
     private boolean authentication(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        String token = request.getHeader("Authorization");
+        String token = URLDecoder.decode(request.getHeader("Authorization"),"UTF-8");
         String[] arr = token.split("_");
         String cacheToken = "";
         if(arr.length > 1){
-            cacheToken = ionaCache.getCacheValue(arr[1]);
+            cacheToken = ionaCache.getCacheValue(URLDecoder.decode(arr[1],"UTF-8") );
         }
 
         // 手写Response，告诉前端没有登录凭证或者登录凭证不存在或者登录凭证不匹配
@@ -62,7 +62,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
             ObjectMapper objectMapper = new ObjectMapper()
                     .configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true);
             response.setHeader("Access-Control-Allow-Origin","*");
-            response.setHeader("Content-Typ","application/json;charset=UTF-8");
+            response.setHeader("Content-Type","application/json;charset=UTF-8");
             response.getWriter().write(objectMapper.writeValueAsString(baseModelView));
             return false;
         }

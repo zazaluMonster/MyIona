@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="iona.mapper.MessageMapper">
+
+	<cache/>
+
+	<resultMap id="messageResultMap" type="message">
+		<id property="id" column="id"/>
+		<result property="html" column="html"/>
+		<result property="createTime" column="createTime"/>
+		<result property="creator" column="creator"/>
+		<result property="creatorName" column="creatorName"/>
+		<result property="avatarUrl" column="avatarUrl"/>
+	</resultMap>
+
+	<select id="selects" resultMap="messageResultMap" parameterType="map">
+		select
+		m.id,
+		m.html,
+		m.createTime,
+		m.creator,
+		c.crewName creatorName,
+		c.avatarUrl avatarUrl
+		from MESSAGE m
+		LEFT JOIN CREW c on m.creator = c.id
+		<if test="item != null">
+			<trim prefix="WHERE" prefixOverrides="AND ">
+				<if test="item.id > 0">
+					AND m.id = #{item.id,jdbcType=NUMERIC}
+				</if>
+				<if test="item.html != null and item.html != ''">
+					AND m.html = #{item.html,jdbcType=VARCHAR}
+				</if>
+				<if test="item.createTime != null and item.createTime != ''">
+					AND m.createTime = #{item.createTime,jdbcType=VARCHAR}
+				</if>
+				<if test="item.creator > 0">
+					AND m.creator = #{item.creator,jdbcType=NUMERIC}
+				</if>
+			</trim>
+		</if>
+		order by m.createTime desc
+	</select>
+
+	<insert id="inserts" useGeneratedKeys="true" keyProperty="id">
+		insert into MESSAGE
+		(
+		html,
+		createTime,
+		creator
+		)
+		values
+		<foreach item="item" collection="list" separator=",">
+			(
+			#{item.html,jdbcType=VARCHAR},
+			#{item.createTime,jdbcType=VARCHAR},
+			#{item.creator,jdbcType=NUMERIC}
+			)
+		</foreach>
+	</insert>
+
+	<delete id="delete">
+		delete
+		from MESSAGE
+		where id = #{id}
+	</delete>
+
+	<delete id="deletes">
+		delete from MESSAGE where id in
+		<foreach collection="ids" item="id" open="(" close=")" separator=",">
+			#{id}
+		</foreach>
+	</delete>
+
+	<update id="update">
+		update MESSAGE set
+		<trim prefix="" suffixOverrides=",">
+			<if test="html != null and html != ''">
+				html = #{html,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null and createTime != ''">
+				createTime = #{createTime,jdbcType=VARCHAR},
+			</if>
+			<if test="creator != null">
+				creator = #{creator,jdbcType=NUMERIC},
+			</if>
+		</trim>
+		where id = #{id}
+	</update>
+
+	<!-- TODO 这种row-by-row方式以后改成更高效的 -->
+	<update id="updates">
+		<foreach collection="items" item="item" open="" close="" separator=";">
+			update MESSAGE set
+			<trim prefix="" suffixOverrides=",">
+				<if test="item.html != null and item.html != ''">
+					html = #{item.html,jdbcType=VARCHAR},
+				</if>
+				<if test="item.createTime != null and item.createTime != ''">
+					createTime = #{item.createTime,jdbcType=VARCHAR},
+				</if>
+				<if test="item.creator != null">
+					creator = #{item.creator,jdbcType=NUMERIC},
+				</if>
+			</trim>
+			where id = ${item.id}
+		</foreach>
+	</update>
+
+	<!-- 其余自定义业务逻辑 -->
+	<select id="getFollowingMessage" resultMap="messageResultMap">
+		select m.id,
+			   m.html,
+			   m.createTime,
+			   m.creator,
+		       c.crewName creatorName,
+		       c.avatarUrl avatarUrl
+		from MESSAGE m
+		LEFT JOIN CREW c on m.creator = c.id
+# 		where creator in (${id}, (select followingId from FOLLOW where followerId = ${id}))
+		where creator in ((select followingId from FOLLOW where followerId = ${id}))
+	</select>
+
+</mapper>
+
+
+
+

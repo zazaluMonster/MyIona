@@ -1,8 +1,10 @@
 package iona.commandLineRunner;
 
 import iona.cache.IonaCache;
+import iona.config.ContantsContext;
 import iona.logger.IonaLogger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
@@ -11,6 +13,8 @@ public class IonaInitRunner implements CommandLineRunner {
 
     @Autowired
     IonaCache ionaCache;
+    @Value("${iona.baseurl}")
+    public String baseURl;
 
     @Override
     public void run(String... args) throws Exception {
@@ -23,5 +27,7 @@ public class IonaInitRunner implements CommandLineRunner {
 
         IonaLogger.info("本系统作者为:" + author);
         IonaLogger.info("iona系统是什么:" + iona);
+
+        ContantsContext.BASE_URL = baseURl;
     }
 }

@@ -13,4 +13,8 @@ public class MyStringUtil {
         IonaLogger.info("短信验证码生成：" + verifyCode);
         return verifyCode;
     }
+
+    public static String getRandomImgVersion(){
+        return "?version=" + Math.random();
+    }
 }

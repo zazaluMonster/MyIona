@@ -5,7 +5,7 @@ public enum MyHttpStatus {
     ERROR(-1,"Iona系统严重报错!"),
     REQUEST_DATA_EMPTY(-1,"请求数据为空"),
     LOGIN_FAIL(1,"用户名或者密码错误"),
-    NETWORK_AUTHENTICATION_REQUIRED(2,"Network Authentication Required"),
+    NETWORK_AUTHENTICATION_REQUIRED(2,"登录失效"),
     REGISTER_FAIL(3, "注册失败,信息重复"),
     REGISTER_SUCCESS(4, "注册成功"),
     PHONE_NUM_ERROR(5, "请先输入手机号"),
