@@ -44,6 +44,17 @@ create index MESSAGE_createTime_uindex
 create index MESSAGE_creator_uindex
     on MESSAGE (creator);
 
+alter table MESSAGE
+    add retweetorId int null comment '转推者id';
+
+alter table MESSAGE
+    add retweetTime VARCHAR(16) null comment '转推时间';
+
+alter table MESSAGE
+    add retweetMessageId int null comment '原推文id';
+
+alter table MESSAGE modify retweetorId int not null comment '转推者id';
+
 --
 
 create table FOLLOW
@@ -71,3 +82,18 @@ create index FOLLOW_followingId_uindex
 create index FOLLOW_followingName_uindex
     on FOLLOW (followingName);
 
+--
+
+create table LIKE_RECORD
+(
+    id int auto_increment,
+    likerId int not null comment '喜欢者用户id',
+    messageId int not null comment '喜欢的Message',
+    constraint LIKE_pk
+        primary key (id)
+)
+    comment '喜欢表';
+
+--
+
+select count(ret.id) from MESSAGE ret where ret.retweetMessageId = m.id

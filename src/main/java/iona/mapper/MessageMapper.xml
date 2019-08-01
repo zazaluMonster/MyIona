@@ -3,7 +3,8 @@
 
 <mapper namespace="iona.mapper.MessageMapper">
 
-	<cache/>
+	<!--<cache />-->
+	<cache-ref namespace="iona.mapper.CrewMapper"/>
 
 	<resultMap id="messageResultMap" type="message">
 		<id property="id" column="id"/>
@@ -12,6 +13,14 @@
 		<result property="creator" column="creator"/>
 		<result property="creatorName" column="creatorName"/>
 		<result property="avatarUrl" column="avatarUrl"/>
+		<result property="curUserId" column="curUserId"/>
+		<result property="likeRecordId" column="likeRecordId"/>
+		<result property="likeNums" column="likeNums"/>
+		<result property="retweetorId" column="retweetorId"/>
+		<result property="retweetTime" column="retweetTime"/>
+		<result property="retweetMessageId" column="retweetMessageId"/>
+		<result property="retweetNums" column="retweetNums"/>
+		<result property="doCurUserRetweet" column="doCurUserRetweet"/>
 	</resultMap>
 
 	<select id="selects" resultMap="messageResultMap" parameterType="map">
@@ -21,11 +30,45 @@
 		m.createTime,
 		m.creator,
 		c.crewName creatorName,
-		c.avatarUrl avatarUrl
+		c.avatarUrl avatarUrl,
+		m.retweetorId,
+		m.retweetTime,
+		m.retweetMessageId,
+		rc.crewName as retweetorName,
+		#判断当前用户是否喜欢此伊文
+		case
+		when m.retweetorId &lt;= 0 then IFNULL(l.id, 0)
+		when m.retweetorId &gt; 0 then IFNULL((select id from LIKE_RECORD lr where lr.messageId = m.retweetMessageId and
+		lr.likerId = #{item.curUserId}),0)
+		END as likeRecordId,
+		#判断当前用户是否转推此伊文
+		case
+		when m.retweetorId &gt; 0 AND m.retweetorId = #{item.curUserId} then m.retweetMessageId
+		when m.retweetorId &gt; 0 AND rmrm.retweetorId = #{item.curUserId} then rmrm.retweetMessageId
+		when rm.id &gt; 0 then rm.id
+		when rm.id IS NULL then 0
+		END as doCurUserRetweet,
+		#喜欢数
+		case
+		# 普通Message
+		when m.retweetorId &lt;= 0 then (select count(ln.id) from LIKE_RECORD ln where ln.messageId = m.id)
+		# 转推Message
+		when m.retweetorId &gt; 0 then (select count(ln.id) from LIKE_RECORD ln where ln.messageId = m.retweetMessageId)
+		END as likeNums,
+		#转推数
+		case
+		when m.retweetorId &lt;= 0 then (select count(ret.id) from MESSAGE ret where ret.retweetMessageId = m.id)
+		when m.retweetorId &gt; 0 then (select count(ret.id) from MESSAGE ret where ret.retweetMessageId =
+		m.retweetMessageId)
+		END as retweetNums
 		from MESSAGE m
 		LEFT JOIN CREW c on m.creator = c.id
-		<if test="item != null">
-			<trim prefix="WHERE" prefixOverrides="AND ">
+		LEFT JOIN CREW rc on m.retweetorId = rc.id
+		LEFT JOIN LIKE_RECORD l on m.id = l.messageId and l.likerId = #{item.curUserId}
+		LEFT JOIN MESSAGE rm on m.id = rm.retweetMessageId and rm.retweetorId = #{item.curUserId}
+		LEFT JOIN MESSAGE rmrm on m.retweetMessageId = rmrm.retweetMessageId and rmrm.retweetorId = #{item.curUserId}
+		<trim prefix="WHERE" prefixOverrides="AND ">
+			<if test="item != null">
 				<if test="item.id > 0">
 					AND m.id = #{item.id,jdbcType=NUMERIC}
 				</if>
@@ -38,8 +81,20 @@
 				<if test="item.creator > 0">
 					AND m.creator = #{item.creator,jdbcType=NUMERIC}
 				</if>
-			</trim>
-		</if>
+				<if test="item.retweetorId > 0">
+					AND m.retweetorId = #{item.retweetorId,jdbcType=NUMERIC}
+				</if>
+				<if test="item.retweetTime != null and item.retweetTime != ''">
+					AND m.retweetTime = #{item.retweetTime,jdbcType=VARCHAR}
+				</if>
+				<if test="item.retweetMessageId > 0">
+					AND m.retweetMessageId = #{item.retweetMessageId,jdbcType=NUMERIC}
+				</if>
+			</if>
+			<if test="OrRetweetorIdIsMy > 0">
+				OR m.retweetorId = #{OrRetweetorIdIsMy,jdbcType=NUMERIC}
+			</if>
+		</trim>
 		order by m.createTime desc
 	</select>
 
@@ -48,7 +103,10 @@
 		(
 		html,
 		createTime,
-		creator
+		creator,
+		retweetorId,
+		retweetTime,
+		retweetMessageId
 		)
 		values
 		<foreach item="item" collection="list" separator=",">
@@ -56,6 +114,18 @@
 			#{item.html,jdbcType=VARCHAR},
 			#{item.createTime,jdbcType=VARCHAR},
 			#{item.creator,jdbcType=NUMERIC}
+			<if test="item.retweetorId == 0">
+				,
+				#{item.retweetorId,jdbcType=NUMERIC},
+				null,
+				null
+			</if>
+			<if test="item.retweetorId > 0">
+				,
+				#{item.retweetorId,jdbcType=NUMERIC},
+				#{item.retweetTime,jdbcType=VARCHAR},
+				#{item.retweetMessageId,jdbcType=NUMERIC}
+			</if>
 			)
 		</foreach>
 	</insert>
@@ -85,6 +155,15 @@
 			<if test="creator != null">
 				creator = #{creator,jdbcType=NUMERIC},
 			</if>
+			<if test="retweetorId > 0">
+				retweetorId = #{retweetorId,jdbcType=NUMERIC},
+			</if>
+			<if test="retweetTime != null and createTime != ''">
+				retweetTime = #{retweetTime,jdbcType=VARCHAR},
+			</if>
+			<if test="retweetMessageId > 0">
+				retweetMessageId = #{retweetMessageId,jdbcType=NUMERIC},
+			</if>
 		</trim>
 		where id = #{id}
 	</update>
@@ -103,6 +182,15 @@
 				<if test="item.creator != null">
 					creator = #{item.creator,jdbcType=NUMERIC},
 				</if>
+				<if test="retweetorId > 0">
+					retweetorId = #{retweetorId,jdbcType=NUMERIC},
+				</if>
+				<if test="retweetTime != null and createTime != ''">
+					retweetTime = #{retweetTime,jdbcType=VARCHAR},
+				</if>
+				<if test="retweetMessageId > 0">
+					retweetMessageId = #{retweetMessageId,jdbcType=NUMERIC},
+				</if>
 			</trim>
 			where id = ${item.id}
 		</foreach>
@@ -114,12 +202,54 @@
 			   m.html,
 			   m.createTime,
 			   m.creator,
-		       c.crewName creatorName,
-		       c.avatarUrl avatarUrl
+			   c.crewName  as creatorName,
+			   c.avatarUrl as avatarUrl,
+			   m.retweetorId,
+			   m.retweetTime,
+			   m.retweetMessageId,
+			   rc.crewName as retweetorName,
+			   #判断当前用户是否喜欢此伊文
+			   case
+				   when m.retweetorId &lt;= 0 then IFNULL(l.id, 0)
+				   when m.retweetorId &gt; 0 then IFNULL((select id
+														  from LIKE_RECORD lr
+														  where lr.messageId = m.retweetMessageId
+															and lr.likerId = ${id}), 0)
+				   END     as likeRecordId,
+			   #判断当前用户是否转推此伊文
+			   case
+				   when m.retweetorId &gt; 0 AND m.retweetorId = ${id} then m.retweetMessageId
+				   when m.retweetorId &gt; 0 AND rmrm.retweetorId = ${id} then rmrm.retweetMessageId
+				   when rm.id &gt; 0 then rm.id
+				   when rm.id IS NULL then 0
+				   END     as doCurUserRetweet,
+			   #喜欢数
+			   case
+				   # 普通Message
+				   when m.retweetorId &lt;= 0 then (select count(ln.id) from LIKE_RECORD ln where ln.messageId = m.id)
+				   # 转推Message
+				   when m.retweetorId &gt; 0 then (select count(ln.id)
+												   from LIKE_RECORD ln
+												   where ln.messageId = m.retweetMessageId)
+				   END     as likeNums,
+			   #转推数
+			   case
+				   when m.retweetorId &lt;= 0 then (select count(ret.id)
+													from MESSAGE ret
+													where ret.retweetMessageId = m.id)
+				   when m.retweetorId &gt; 0 then (select count(ret.id)
+												   from MESSAGE ret
+												   where ret.retweetMessageId = m.retweetMessageId)
+				   END     as retweetNums
 		from MESSAGE m
-		LEFT JOIN CREW c on m.creator = c.id
-# 		where creator in (${id}, (select followingId from FOLLOW where followerId = ${id}))
-		where creator in ((select followingId from FOLLOW where followerId = ${id}))
+				 LEFT JOIN CREW c on m.creator = c.id
+				 LEFT JOIN CREW rc on m.retweetorId = rc.id
+				 LEFT JOIN LIKE_RECORD l on m.id = l.messageId and l.likerId = ${id}
+				 LEFT JOIN MESSAGE rm on m.id = rm.retweetMessageId and rm.retweetorId = ${id}
+				 LEFT JOIN MESSAGE rmrm on m.retweetMessageId = rmrm.retweetMessageId and rmrm.retweetorId = ${id}
+# 		where m.creator in (${id}, (select followingId from FOLLOW where followerId = ${id}))
+		where m.creator in ((select followingId from FOLLOW where followerId = ${id}))
+		order by m.createTime desc
 	</select>
 
 </mapper>

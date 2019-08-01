@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="iona.mapper.LikeMapper">
+
+	<!--<cache/>-->
+	<cache-ref namespace="iona.mapper.CrewMapper"/>
+
+	<resultMap id="likeResultMap" type="like">
+		<id property="id" column="id" />
+		<result property="likerId" column="likerId"/>
+		<result property="messageId" column="messageId"/>
+	</resultMap>
+
+	<select id="selects" resultMap="likeResultMap" parameterType="map">
+		select
+		id,
+		likerId,
+		messageId
+		from LIKE_RECORD
+		<if test="item != null">
+			<trim prefix="WHERE" prefixOverrides="AND ">
+				<if test="item.id > 0">
+					AND id = #{item.id,jdbcType=NUMERIC}
+				</if>
+				<if test="item.likerId > 0">
+					AND likerId = #{item.likerId,jdbcType=NUMERIC}
+				</if>
+				<if test="item.messageId > 0">
+					AND messageId = #{item.messageId,jdbcType=NUMERIC}
+				</if>
+				
+			</trim>
+		</if>
+	</select>
+
+	<insert id="inserts" useGeneratedKeys="true" keyProperty="id">
+		insert into LIKE_RECORD
+		(
+		likerId,
+		messageId
+		)
+		values
+		<foreach item="item" collection="list" separator=",">
+		   (
+		    	#{item.likerId,jdbcType=NUMERIC},
+		    	#{item.messageId,jdbcType=NUMERIC}
+			)
+		</foreach>
+	</insert>
+
+	<delete id="delete">
+		delete from LIKE_RECORD where id = #{id}
+	</delete>
+
+	<delete id="deletes">
+		delete from LIKE_RECORD where id in
+		<foreach collection="ids" item="id" open="(" close=")" separator=",">
+			#{id}
+		</foreach>
+	</delete>
+
+	<update id="update" >
+		update LIKE_RECORD set
+		<trim prefix="" suffixOverrides=",">
+			<if test="likerId > 0">
+				likerId = #{likerId,jdbcType=NUMERIC},
+			</if>
+			<if test="messageId > 0">
+				messageId = #{messageId,jdbcType=NUMERIC},
+			</if>
+		</trim>
+		where id = #{id}
+	</update>
+
+	<!-- TODO 这种row-by-row方式以后改成更高效的 -->
+	<update id="updates">
+		<foreach collection="items" item="item" open="" close="" separator=";">
+			update LIKE_RECORD set
+			<trim prefix="" suffixOverrides=",">
+				<if test="item.likerId != null">
+					likerId = #{item.likerId,jdbcType=NUMERIC},
+				</if>
+				<if test="item.messageId != null">
+					messageId = #{item.messageId,jdbcType=NUMERIC},
+				</if>
+			</trim>
+			where id = ${item.id}
+		</foreach>
+	</update>
+
+</mapper>
+
+
+
+

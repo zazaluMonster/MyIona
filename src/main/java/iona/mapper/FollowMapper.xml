@@ -3,7 +3,9 @@
 
 <mapper namespace="iona.mapper.FollowMapper">
 
-	<cache/>
+	<!--<cache/>-->
+	<cache-ref namespace="iona.mapper.CrewMapper"/>
+
 
 	<resultMap id="followResultMap" type="follow">
 		<id property="id" column="id" />

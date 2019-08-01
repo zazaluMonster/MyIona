@@ -3,6 +3,7 @@
 
 <mapper namespace="iona.mapper.CrewMapper">
 
+	<!--选择一个Namespace作为主namespace，其余Mapper全部使用cache-ref引用此Cache-->
 	<cache/>
 
 	<resultMap id="crewResultMap" type="crew">
