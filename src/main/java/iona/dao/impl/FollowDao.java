@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 @Component
-public class FollowDao implements IFollowDao {
+public class FollowDao extends AbstractDao implements IFollowDao {
 
     @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
     @Autowired

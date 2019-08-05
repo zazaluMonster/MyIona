@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 @Component
-public class LikeDao implements ILikeDao {
+public class LikeDao extends AbstractDao implements ILikeDao {
 
     @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
     @Autowired

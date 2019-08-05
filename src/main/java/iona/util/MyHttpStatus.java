@@ -15,6 +15,7 @@ public enum MyHttpStatus {
     NO_CREWNAME_ERROR(5, "提交数据异常,请联系管理员"),
     NULL_POINTER_ERROR(5, "空指针异常,请联系管理员"),
     IO_ERROR(5, "IO异常,请联系管理员"),
+    MESSAGE_404(5, "该伊文已删除"),
     OLD_PASSWORD_WRONG(6, "旧密码输入错误");
 
     private final int value;

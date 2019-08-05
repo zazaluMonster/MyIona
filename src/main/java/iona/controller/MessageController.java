@@ -120,4 +120,21 @@ public class MessageController {
         MessageResponse result = new MessageResponse(status, list, DateUtil.getTimeString(new Date()));
         return result;
     }
+
+    /**
+     * 伊文详情
+     */
+    @RequestMapping(value = "/messageDetail", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public MessageResponse messageDetail(@RequestBody Message message) {
+        MyHttpStatus status = MyHttpStatus.OK;
+
+        Message hit = messageService.getMessageByIdAndCurUserId(message.getId(),message.getCurUserId());
+
+        if (hit == null) {
+            return new MessageResponse(MyHttpStatus.MESSAGE_404);
+        }
+
+        MessageResponse result = new MessageResponse(status,hit);
+        return result;
+    }
 }

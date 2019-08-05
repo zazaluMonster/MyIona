@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="iona.mapper.CommentMapper">
+
+	<!--<cache/>-->
+	<cache-ref namespace="iona.mapper.CrewMapper"/>
+
+	<resultMap id="commentResultMap" type="comment">
+		<id property="id" column="id" />
+		<result property="commentatorId" column="commentatorId"/>
+		<result property="html" column="html"/>
+		<result property="messageId" column="messageId"/>
+		<result property="fatherId" column="fatherId"/>
+		<result property="createTime" column="createTime"/>
+		<result property="crewName" column="crewName"/>
+		<result property="avatarUrl" column="avatarUrl"/>
+	</resultMap>
+
+	<select id="selects" resultMap="commentResultMap" parameterType="map">
+		select
+		m.id,
+		m.commentatorId,
+		m.html,
+		m.messageId,
+		m.fatherId,
+		m.createTime,
+		c.crewName crewName,
+		c.avatarUrl avatarUrl
+		from COMMENT m
+		LEFT JOIN CREW c on m.commentatorId = c.id
+		<if test="item != null">
+			<trim prefix="WHERE" prefixOverrides="AND ">
+				<if test="item.id > 0">
+					AND m.id = #{item.id,jdbcType=NUMERIC}
+				</if>
+				<if test="item.commentatorId > 0">
+					AND m.commentatorId = #{item.commentatorId,jdbcType=NUMERIC}
+				</if>
+				<if test="item.html != null and item.html != ''">
+					AND m.html = #{item.html,jdbcType=VARCHAR}
+				</if>
+				<if test="item.messageId > 0">
+					AND m.messageId = #{item.messageId,jdbcType=NUMERIC}
+				</if>
+				<if test="item.fatherId > 0">
+					AND m.fatherId = #{item.fatherId,jdbcType=NUMERIC}
+				</if>
+				<if test="item.createTime != null and item.createTime != ''">
+					AND m.createTime = #{item.createTime,jdbcType=VARCHAR}
+				</if>
+			</trim>
+		</if>
+		order by m.createTime desc
+	</select>
+
+	<insert id="inserts" useGeneratedKeys="true" keyProperty="id">
+		insert into COMMENT
+		(
+		commentatorId,
+		html,
+		messageId,
+		fatherId,
+		createTime
+		)
+		values
+		<foreach item="item" collection="list" separator=",">
+		   (
+		    	#{item.commentatorId,jdbcType=NUMERIC},
+		    	#{item.html,jdbcType=VARCHAR},
+				#{item.messageId,jdbcType=NUMERIC},
+				#{item.fatherId,jdbcType=NUMERIC},
+				#{item.createTime,jdbcType=VARCHAR}
+			)
+		</foreach>
+	</insert>
+
+	<delete id="delete">
+		delete from COMMENT where id = #{id}
+	</delete>
+
+	<delete id="deletes">
+		delete from COMMENT where id in
+		<foreach collection="ids" item="id" open="(" close=")" separator=",">
+			#{id}
+		</foreach>
+	</delete>
+
+	<update id="update" >
+		update COMMENT set
+		<trim prefix="" suffixOverrides=",">
+			<if test="commentatorId > 0">
+				commentatorId = #{commentatorId,jdbcType=NUMERIC},
+			</if>
+			<if test="html != null and html != ''">
+				html = #{html,jdbcType=VARCHAR},
+			</if>
+			<if test="messageId > 0">
+				messageId = #{messageId,jdbcType=NUMERIC},
+			</if>
+			<if test="fatherId > 0">
+				fatherId = #{fatherId,jdbcType=NUMERIC},
+			</if>
+			<if test="createTime != null and createTime != ''">
+				createTime = #{createTime,jdbcType=VARCHAR},
+			</if>
+		</trim>
+		where id = #{id}
+	</update>
+
+	<!-- TODO 这种row-by-row方式以后改成更高效的 -->
+	<update id="updates">
+		<foreach collection="items" item="item" open="" close="" separator=";">
+			update COMMENT set
+			<trim prefix="" suffixOverrides=",">
+				<if test="commentatorId > 0">
+					commentatorId = #{commentatorId,jdbcType=NUMERIC},
+				</if>
+				<if test="html != null and html != ''">
+					html = #{html,jdbcType=VARCHAR},
+				</if>
+				<if test="messageId > 0">
+					messageId = #{messageId,jdbcType=NUMERIC},
+				</if>
+				<if test="fatherId > 0">
+					fatherId = #{fatherId,jdbcType=NUMERIC},
+				</if>
+				<if test="createTime != null and createTime != ''">
+					createTime = #{createTime,jdbcType=VARCHAR},
+				</if>
+			</trim>
+			where id = ${item.id}
+		</foreach>
+	</update>
+
+</mapper>
+
+
+
+

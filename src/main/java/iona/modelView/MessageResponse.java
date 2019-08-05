@@ -9,6 +9,7 @@ import java.util.List;
 public class MessageResponse extends BaseModelView {
     private List<Message> messages;
     private String currentTime;
+    private Message messageDetail;
 
     public MessageResponse(MyHttpStatus status) {
         super(status);
@@ -22,6 +23,11 @@ public class MessageResponse extends BaseModelView {
         super(status);
         this.messages = messages;
         this.currentTime = currentTime;
+    }
+
+    public MessageResponse(MyHttpStatus status, Message messageDetail) {
+        super(status);
+        this.messageDetail = messageDetail;
     }
 
     public List<Message> getMessages() {
@@ -38,5 +44,13 @@ public class MessageResponse extends BaseModelView {
 
     public void setCurrentTime(String currentTime) {
         this.currentTime = currentTime;
+    }
+
+    public Message getMessageDetail() {
+        return messageDetail;
+    }
+
+    public void setMessageDetail(Message messageDetail) {
+        this.messageDetail = messageDetail;
     }
 }

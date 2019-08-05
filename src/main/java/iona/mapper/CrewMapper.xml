@@ -7,7 +7,7 @@
 	<cache/>
 
 	<resultMap id="crewResultMap" type="crew">
-		<id property="id" column="id" />
+		<id property="id" column="id"/>
 		<result property="crewName" column="crewName"/>
 		<result property="phoneNum" column="phoneNum"/>
 		<result property="mail" column="mail"/>
@@ -32,8 +32,9 @@
 		createTime,
 		filed1
 		from CREW
-		<if test="item != null">
-			<trim prefix="WHERE" prefixOverrides="AND ">
+		<trim prefix="WHERE" prefixOverrides="AND ">
+			<if test="item != null">
+
 				<if test="item.id > 0">
 					AND id = #{item.id,jdbcType=NUMERIC}
 				</if>
@@ -64,10 +65,14 @@
 				<if test="item.filed1 != null and item.filed1 != ''">
 					AND filed1 = #{item.filed1,jdbcType=VARCHAR}
 				</if>
-			</trim>
-		</if>
-
+			</if>
+			<if test="excludeId > 0">
+				AND id != #{excludeId,jdbcType=NUMERIC}
+			</if>
+		</trim>
+		<include refid="iona.mapper.BaseMapper.pager"/>
 	</select>
+
 
 	<insert id="inserts" useGeneratedKeys="true" keyProperty="id">
 		insert into CREW
@@ -84,22 +89,24 @@
 		)
 		values
 		<foreach item="item" collection="list" separator=",">
-		   (
-		    	#{item.crewName,jdbcType=VARCHAR},
-		    	#{item.phoneNum,jdbcType=VARCHAR},
-		    	#{item.mail,jdbcType=VARCHAR},
-		    	#{item.crewMessage,jdbcType=VARCHAR},
-		    	#{item.avatarUrl,jdbcType=VARCHAR},
-		    	#{item.passwordMd5,jdbcType=VARCHAR},
-		    	#{item.lastOfflineTime,jdbcType=VARCHAR},
-		    	#{item.createTime,jdbcType=VARCHAR},
-		    	#{item.filed1,jdbcType=VARCHAR}
+			(
+			#{item.crewName,jdbcType=VARCHAR},
+			#{item.phoneNum,jdbcType=VARCHAR},
+			#{item.mail,jdbcType=VARCHAR},
+			#{item.crewMessage,jdbcType=VARCHAR},
+			#{item.avatarUrl,jdbcType=VARCHAR},
+			#{item.passwordMd5,jdbcType=VARCHAR},
+			#{item.lastOfflineTime,jdbcType=VARCHAR},
+			#{item.createTime,jdbcType=VARCHAR},
+			#{item.filed1,jdbcType=VARCHAR}
 			)
 		</foreach>
 	</insert>
 
 	<delete id="delete">
-		delete from CREW where id = #{id}
+		delete
+		from CREW
+		where id = #{id}
 	</delete>
 
 	<delete id="deletes">
@@ -109,7 +116,7 @@
 		</foreach>
 	</delete>
 
-	<update id="update" >
+	<update id="update">
 		update CREW set
 		<trim prefix="" suffixOverrides=",">
 			<if test="crewName != null and crewName != ''">

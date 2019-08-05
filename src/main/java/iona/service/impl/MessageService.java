@@ -148,4 +148,9 @@ public class MessageService implements IMessageService {
         Message message = getByRetweetorIdAndRetweetMessageId(retweetorId,retweetMessageId);
         messageDao.delete(message.getId());
     }
+
+    @Override
+    public Message getMessageByIdAndCurUserId(int id, int curUserId) {
+        return messageDao.getMessageByIdAndCurUserId(id,curUserId);
+    }
 }

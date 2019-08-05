@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface IMessageDao extends BaseDao<Message> {
     List<Message> getFollowingMessage(int id);
+    Message getMessageByIdAndCurUserId(int id,int curUserId);
 }

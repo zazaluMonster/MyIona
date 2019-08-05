@@ -33,6 +33,8 @@ public class Crew implements Serializable {
     private String createTime;
     private String filed1;
 
+    private int isFollow;
+
     public int getId() {
         return id;
     }
@@ -111,5 +113,13 @@ public class Crew implements Serializable {
 
     public void setFiled1(String filed1) {
         this.filed1 = filed1;
+    }
+
+    public int getIsFollow() {
+        return isFollow;
+    }
+
+    public void setIsFollow(int isFollow) {
+        this.isFollow = isFollow;
     }
 }

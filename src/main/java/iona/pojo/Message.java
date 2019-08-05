@@ -17,6 +17,7 @@ public class Message implements Serializable {
     //关联数据
     private String creatorName;
     private String avatarUrl;
+    private String mail;
     private int curUserId;//当前查阅者id
 
     //喜欢
@@ -33,6 +34,25 @@ public class Message implements Serializable {
     private String retweetorName;
     private int doCurUserRetweet;
 
+    //评论
+    private String commentNums;
+
+
+    public String getCommentNums() {
+        return commentNums;
+    }
+
+    public void setCommentNums(String commentNums) {
+        if (StringUtils.isEmpty(commentNums)) {
+            this.commentNums = commentNums;
+        } else {
+            if (commentNums.equals(ContantsContext.ZERO)) {
+                this.commentNums = "";
+            } else {
+                this.commentNums = commentNums;
+            }
+        }
+    }
 
     public int getId() {
         return id;
@@ -200,5 +220,13 @@ public class Message implements Serializable {
             this.setRetweetIconType(ContantsContext.IOS_REPEAT);
         }
         this.doCurUserRetweet = doCurUserRetweet;
+    }
+
+    public String getMail() {
+        return mail;
+    }
+
+    public void setMail(String mail) {
+        this.mail = mail;
     }
 }

@@ -96,4 +96,27 @@ create table LIKE_RECORD
 
 --
 
-select count(ret.id) from MESSAGE ret where ret.retweetMessageId = m.id
+create table COMMENT
+(
+    id int auto_increment,
+    commentatorId int not null comment '评论人id',
+    html VARCHAR(1000) not null comment '评论内容',
+    messageId int null comment '评论的是哪条伊文',
+    fatherId int null comment '父评论Id',
+    createTime VARCHAR(16) not null comment '评论时间',
+    constraint COMMENT_pk
+        primary key (id)
+)
+    comment '评论表';
+
+create index COMMENT_commentatorId_index
+    on COMMENT (commentatorId);
+
+create index COMMENT_fatherId_index
+    on COMMENT (fatherId);
+
+create index COMMENT_messageId_index
+    on COMMENT (messageId);
+
+create index COMMENT_createTime_index
+    on COMMENT (createTime);

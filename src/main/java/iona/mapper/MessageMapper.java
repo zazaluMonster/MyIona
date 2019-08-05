@@ -8,4 +8,5 @@ import java.util.List;
 @Mapper
 public interface MessageMapper extends BaseMapper<Message> {
     List<Message> getFollowingMessage(int id);
+    Message getMessageByIdAndCurUserId(int messageId,int curUserId);
 }

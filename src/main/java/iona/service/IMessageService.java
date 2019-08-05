@@ -17,4 +17,5 @@ public interface IMessageService extends BaseService<Message> {
     List<Message> getMessageRandom(int curUserId);
     List<Message> getFollowingMessage(int curUserId);
     Message getByRetweetorIdAndRetweetMessageId(int retweetorId, int retweetMessageId) throws IonaException;
+    Message getMessageByIdAndCurUserId(int id,int curUserId);
 }

@@ -5,6 +5,7 @@ import iona.dao.ICrewDao;
 import iona.exception.IonaException;
 import iona.logger.IonaLogger;
 import iona.pojo.Crew;
+import iona.pojo.Pager;
 import iona.service.ICrewService;
 import iona.util.DateUtil;
 import iona.util.TokenUtil;
@@ -212,4 +213,8 @@ public class CrewService implements ICrewService {
         return crewDao.selects(condition);
     }
 
+    @Override
+    public List<Crew> selects(Map<String, Object> condition, Pager pager) throws IonaException {
+        return  crewDao.selects(condition,pager);
+    }
 }

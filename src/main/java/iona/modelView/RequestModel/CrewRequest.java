@@ -10,6 +10,12 @@ public class CrewRequest {
     private String crewName;
     private String avatarImgCode;
 
+
+    private int curUserId;
+    private int associatedUserId;
+    private int pagerSize;
+    private int pagerIndex;
+
     /**
      * 密码重设类型
      */
@@ -72,5 +78,37 @@ public class CrewRequest {
 
     public void setCrewName(String crewName) {
         this.crewName = crewName;
+    }
+
+    public int getPagerSize() {
+        return pagerSize;
+    }
+
+    public void setPagerSize(int pagerSize) {
+        this.pagerSize = pagerSize;
+    }
+
+    public int getPagerIndex() {
+        return pagerIndex;
+    }
+
+    public void setPagerIndex(int pagerIndex) {
+        this.pagerIndex = pagerIndex;
+    }
+
+    public int getAssociatedUserId() {
+        return associatedUserId;
+    }
+
+    public void setAssociatedUserId(int associatedUserId) {
+        this.associatedUserId = associatedUserId;
+    }
+
+    public int getCurUserId() {
+        return curUserId;
+    }
+
+    public void setCurUserId(int curUserId) {
+        this.curUserId = curUserId;
     }
 }

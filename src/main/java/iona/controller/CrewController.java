@@ -2,13 +2,17 @@ package iona.controller;
 
 import iona.async.RunnerQueue;
 import iona.async.asyncRunner.SaveFileRunner;
+import iona.config.ContantsContext;
 import iona.exception.FirstLoginException;
 import iona.exception.IonaException;
 import iona.logger.IonaLogger;
 import iona.modelView.CrewResponse;
 import iona.modelView.RequestModel.CrewRequest;
 import iona.pojo.Crew;
+import iona.pojo.Follow;
+import iona.pojo.Pager;
 import iona.service.ICrewService;
+import iona.service.IFollowService;
 import iona.util.IonaBase64Util;
 import iona.util.MyHttpStatus;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,8 +24,9 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.File;
-import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 @Controller
@@ -31,6 +36,8 @@ public class CrewController {
 
     @Autowired
     private ICrewService crewService;
+    @Autowired
+    private IFollowService followService;
     @Autowired
     RunnerQueue runnerQueue;
     @Autowired
@@ -119,6 +126,34 @@ public class CrewController {
 
         //TODO 后续加上分页系统
         List<Crew> crewList = crewService.selects(null);
+
+        return new CrewResponse(status, crewList);
+    }
+
+    /**
+     * 获取推荐用户信息
+     */
+    @RequestMapping(value = "/recommendUser", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public CrewResponse recommendUser(@RequestBody CrewRequest crewRequest) throws IonaException {
+        MyHttpStatus status = MyHttpStatus.OK;
+
+        Map<String,Object> condition = new HashMap<>();
+        //TODO 根据关联用户大数据筛选推荐用户信息
+        condition.put("excludeId",crewRequest.getCurUserId());
+
+
+        Pager pager = new Pager(crewRequest.getPagerIndex(),crewRequest.getPagerSize());
+        List<Crew> crewList = crewService.selects(condition,pager);
+
+        //查询推荐用户对于当前登录角色是否已关注
+        for (Crew crew: crewList) {
+            Follow follow = followService.getByFollowIdAndFollowingId(crewRequest.getAssociatedUserId(),crew.getId());
+            if(follow == null){
+                crew.setIsFollow(ContantsContext.I_FALSE);
+            }else{
+                crew.setIsFollow(ContantsContext.I_TRUE);
+            }
+        }
 
         return new CrewResponse(status, crewList);
     }

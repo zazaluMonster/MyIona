@@ -1,8 +1,10 @@
 package iona.dao.impl;
 
 import iona.dao.ICrewDao;
+import iona.exception.IonaException;
 import iona.mapper.CrewMapper;
 import iona.pojo.Crew;
+import iona.pojo.Pager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -10,7 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 @Component
-public class CrewDao implements ICrewDao {
+public class CrewDao extends AbstractDao implements ICrewDao {
 
     @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
     @Autowired
@@ -46,4 +48,9 @@ public class CrewDao implements ICrewDao {
         return crewMapper.selects(condition);
     }
 
+    @Override
+    public List<Crew> selects(Map<String, Object> condition, Pager pager) throws IonaException {
+        setPager(condition,pager);
+        return crewMapper.selects(condition);
+    }
 }

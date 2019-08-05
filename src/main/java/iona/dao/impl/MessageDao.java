@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 @Component
-public class MessageDao implements IMessageDao {
+public class MessageDao extends AbstractDao implements IMessageDao {
 
     @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
     @Autowired
@@ -49,5 +49,10 @@ public class MessageDao implements IMessageDao {
     @Override
     public List<Message> getFollowingMessage(int id) {
         return messageMapper.getFollowingMessage(id);
+    }
+
+    @Override
+    public Message getMessageByIdAndCurUserId(int id, int curUserId) {
+        return messageMapper.getMessageByIdAndCurUserId(id,curUserId);
     }
 }

@@ -15,6 +15,8 @@ public class IonaInitRunner implements CommandLineRunner {
     IonaCache ionaCache;
     @Value("${iona.baseurl}")
     public String baseURl;
+    @Value("${iona.pageSize}")
+    public int pageSize;
 
     @Override
     public void run(String... args) throws Exception {
@@ -29,5 +31,6 @@ public class IonaInitRunner implements CommandLineRunner {
         IonaLogger.info("iona系统是什么:" + iona);
 
         ContantsContext.BASE_URL = baseURl;
+        ContantsContext.PAGER_SIZE = pageSize;
     }
 }
