@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="iona.mapper.NoticeMapper">
+
+	<!--<cache/>-->
+	<cache-ref namespace="iona.mapper.CrewMapper"/>
+
+	<resultMap id="noticeResultMap" type="notice">
+		<id property="id" column="id" />
+		<result property="notifierId" column="notifierId"/>
+		<result property="content" column="content"/>
+		<result property="url" column="url"/>
+		<result property="createTime" column="createTime"/>
+		<result property="isRead" column="isRead"/>
+	</resultMap>
+
+	<select id="selects" resultMap="noticeResultMap" parameterType="map">
+		select
+		id,
+		notifierId,
+		content,
+		url,
+		createTime,
+		isRead
+		from NOTICE
+		<if test="item != null">
+			<trim prefix="WHERE" prefixOverrides="AND ">
+				<if test="item.id > 0">
+					AND id = #{item.id,jdbcType=NUMERIC}
+				</if>
+				<if test="item.notifierId > 0">
+					AND notifierId = #{item.notifierId,jdbcType=NUMERIC}
+				</if>
+				<if test="item.content != null and item.content != ''">
+					AND content = #{item.content,jdbcType=VARCHAR}
+				</if>
+				<if test="item.url != null and item.url != ''">
+					AND url = #{item.url,jdbcType=VARCHAR}
+				</if>
+				<if test="item.createTime != null and item.createTime != ''">
+					AND createTime = #{item.createTime,jdbcType=VARCHAR}
+				</if>
+				<if test="item.isRead != null">
+					AND isRead = #{item.isRead,jdbcType=NUMERIC}
+				</if>
+
+			</trim>
+		</if>
+		order by createTime desc
+	</select>
+
+	<insert id="inserts" useGeneratedKeys="true" keyProperty="id">
+		insert into NOTICE
+		(
+		notifierId,
+		content,
+		url,
+		createTime,
+		isRead
+		)
+		values
+		<foreach item="item" collection="list" separator=",">
+		   (
+		    	#{item.notifierId,jdbcType=NUMERIC},
+		    	#{item.content,jdbcType=VARCHAR},
+		    	#{item.url,jdbcType=VARCHAR},
+		    	#{item.createTime,jdbcType=VARCHAR},
+		    	#{item.isRead,jdbcType=NUMERIC}
+			)
+		</foreach>
+	</insert>
+
+	<delete id="delete">
+		delete from NOTICE where id = #{id}
+	</delete>
+
+	<delete id="deletes">
+		delete from NOTICE where id in
+		<foreach collection="ids" item="id" open="(" close=")" separator=",">
+			#{id}
+		</foreach>
+	</delete>
+
+	<update id="update" >
+		update NOTICE set
+		<trim prefix="" suffixOverrides=",">
+			<if test="notifierId > 0">
+				notifierId = #{notifierId,jdbcType=NUMERIC},
+			</if>
+			<if test="item.content != null and item.content != ''">
+				content = #{item.content,jdbcType=VARCHAR},
+			</if>
+			<if test="item.url != null and item.url != ''">
+				url = #{item.url,jdbcType=VARCHAR},
+			</if>
+			<if test="item.createTime != null and item.createTime != ''">
+				createTime = #{item.createTime,jdbcType=VARCHAR},
+			</if>
+		    <if test="item.isRead != null">
+				isRead = #{item.isRead,jdbcType=NUMERIC},
+			</if>
+		</trim>
+		where id = #{id}
+	</update>
+
+	<!-- TODO 这种row-by-row方式以后改成更高效的 -->
+	<update id="updates">
+		<foreach collection="items" item="item" open="" close="" separator=";">
+			update NOTICE set
+			<trim prefix="" suffixOverrides=",">
+				<if test="notifierId > 0">
+					notifierId = #{notifierId,jdbcType=NUMERIC},
+				</if>
+				<if test="item.content != null and item.content != ''">
+					content = #{item.content,jdbcType=VARCHAR},
+				</if>
+				<if test="item.url != null and item.url != ''">
+					url = #{item.url,jdbcType=VARCHAR},
+				</if>
+				<if test="item.createTime != null and item.createTime != ''">
+					createTime = #{item.createTime,jdbcType=VARCHAR},
+				</if>
+				<if test="item.isRead != null">
+					isRead = #{item.isRead,jdbcType=NUMERIC},
+				</if>
+			</trim>
+			where id = ${item.id}
+		</foreach>
+	</update>
+
+</mapper>
+
+
+
+

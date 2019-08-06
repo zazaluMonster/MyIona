@@ -120,3 +120,23 @@ create index COMMENT_messageId_index
 
 create index COMMENT_createTime_index
     on COMMENT (createTime);
+
+--
+
+create table NOTICE
+(
+    id int auto_increment,
+    notifierId int not null comment '被通知人id',
+    content VARCHAR(1000) not null comment '通知内容',
+    createTime VARCHAR(16) not null comment '通知时间',
+    url VARCHAR(1000) not null comment '跳转URL',
+    constraint NOTICE_pk
+        primary key (id)
+)
+    comment '通知表';
+
+create index NOTICE_notifierId_uindex
+    on NOTICE (notifierId);
+
+alter table NOTICE
+    add isRead int not null comment '是否已阅';

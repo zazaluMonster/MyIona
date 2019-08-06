@@ -17,6 +17,8 @@ public class IonaInitRunner implements CommandLineRunner {
     public String baseURl;
     @Value("${iona.pageSize}")
     public int pageSize;
+    @Value("${server.servlet.context-path}")
+    public String contextPath;
 
     @Override
     public void run(String... args) throws Exception {
@@ -32,5 +34,6 @@ public class IonaInitRunner implements CommandLineRunner {
 
         ContantsContext.BASE_URL = baseURl;
         ContantsContext.PAGER_SIZE = pageSize;
+        ContantsContext.CONTEXT_PATH = contextPath;
     }
 }

@@ -13,6 +13,7 @@ import iona.pojo.Follow;
 import iona.pojo.Pager;
 import iona.service.ICrewService;
 import iona.service.IFollowService;
+import iona.service.INoticeService;
 import iona.util.IonaBase64Util;
 import iona.util.MyHttpStatus;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +39,8 @@ public class CrewController {
     private ICrewService crewService;
     @Autowired
     private IFollowService followService;
+    @Autowired
+    private INoticeService noticeService;
     @Autowired
     RunnerQueue runnerQueue;
     @Autowired
@@ -82,6 +85,7 @@ public class CrewController {
         MyHttpStatus status = MyHttpStatus.OK;
         String msg = MyHttpStatus.REGISTER_SUCCESS.getReasonPhrase();
 
+        //注册
         if (crewService.isCrewAlreadyExist(crew.getCrewName(), crew.getPhoneNum(), crew.getMail())) {
             status = MyHttpStatus.REGISTER_FAIL;
             msg = MyHttpStatus.REGISTER_FAIL.getReasonPhrase();
@@ -89,6 +93,9 @@ public class CrewController {
             int id = crewService.register(crew);
             IonaLogger.info("新注册id:" + id);
         }
+
+        //注册通知
+        noticeService.registerNotice(crew.getId());
 
         CrewResponse result = new CrewResponse(status);
         return result;
