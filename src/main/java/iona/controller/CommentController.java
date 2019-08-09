@@ -5,7 +5,9 @@ import iona.exception.IonaException;
 import iona.modelView.CommentResponse;
 import iona.modelView.CrewResponse;
 import iona.pojo.Comment;
+import iona.pojo.Notice;
 import iona.service.ICommentService;
+import iona.service.INoticeService;
 import iona.util.MyHttpStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -26,6 +28,8 @@ public class CommentController {
     @Autowired
     private ICommentService commentService;
     @Autowired
+    private INoticeService noticeService;
+    @Autowired
     RunnerQueue runnerQueue;
     @Autowired
     ApplicationContext applicationContext;
@@ -39,6 +43,8 @@ public class CommentController {
         MyHttpStatus status = MyHttpStatus.OK;
 
         commentService.newComment(comment);
+
+        noticeService.produceNotice(comment.getMessageCreator(), Notice.NoticeType.COMMENT,comment.getMessageId(),0);
 
         return new CommentResponse(status);
     }

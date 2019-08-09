@@ -140,3 +140,11 @@ create index NOTICE_notifierId_uindex
 
 alter table NOTICE
     add isRead int not null comment '是否已阅';
+
+select m.id, m.html, m.createTime, m.creator, c.crewName creatorName, c.avatarUrl avatarUrl, m.retweetorId, m.retweetTime, m.retweetMessageId, rc.crewName as retweetorName,
+       case when m.retweetorId <= 0 then IFNULL(l.id, 0) when m.retweetorId > 0 then IFNULL((select id from LIKE_RECORD lr where lr.messageId = m.retweetMessageId and lr.likerId = ?),0) END as likeRecordId,
+       case when m.retweetorId > 0 AND m.retweetorId = ? then m.retweetMessageId when m.retweetorId > 0 AND rmrm.retweetorId = ? then rmrm.retweetMessageId when rm.id > 0 then rm.id when rm.id IS NULL then 0 END as doCurUserRetweet,
+       case when m.retweetorId <= 0 then (select count(ln.id) from LIKE_RECORD ln where ln.messageId = m.id)
+            when m.retweetorId > 0 then (select count(ln.id) from LIKE_RECORD ln where ln.messageId = m.retweetMessageId) END as likeNums,
+       case when m.retweetorId <= 0 then (select count(ret.id) from MESSAGE ret where ret.retweetMessageId = m.id) when m.retweetorId > 0 then (select count(ret.id) from MESSAGE ret where ret.retweetMessageId = m.retweetMessageId) END as retweetNums,
+       (select count(id) from COMMENT com where com.messageId = m.id) as commentNums from MESSAGE m LEFT JOIN CREW c on m.creator = c.id LEFT JOIN CREW rc on m.retweetorId = rc.id LEFT JOIN LIKE_RECORD l on m.id = l.messageId and l.likerId = ? LEFT JOIN MESSAGE rm on m.id = rm.retweetMessageId and rm.retweetorId = ? LEFT JOIN MESSAGE rmrm on m.retweetMessageId = rmrm.retweetMessageId and rmrm.retweetorId = ? WHERE m.creator = ? OR m.retweetorId = ? order by m.createTime desc

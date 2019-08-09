@@ -17,6 +17,7 @@ public class Comment implements Serializable {
     private String createTime;
 
     //关联数据
+    private int messageCreator;
     private String crewName;
     private String avatarUrl;
 
@@ -82,5 +83,13 @@ public class Comment implements Serializable {
 
     public void setAvatarUrl(String avatarUrl) {
         this.avatarUrl = ContantsContext.BASE_URL + avatarUrl + MyStringUtil.getRandomImgVersion();
+    }
+
+    public int getMessageCreator() {
+        return messageCreator;
+    }
+
+    public void setMessageCreator(int messageCreator) {
+        this.messageCreator = messageCreator;
     }
 }

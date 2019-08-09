@@ -10,6 +10,7 @@ import iona.modelView.CrewResponse;
 import iona.modelView.RequestModel.CrewRequest;
 import iona.pojo.Crew;
 import iona.pojo.Follow;
+import iona.pojo.Notice;
 import iona.pojo.Pager;
 import iona.service.ICrewService;
 import iona.service.IFollowService;
@@ -81,7 +82,7 @@ public class CrewController {
      * @return 返回注册反馈信息
      */
     @RequestMapping(value = "/register", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public CrewResponse register(@RequestBody Crew crew) {
+    public CrewResponse register(@RequestBody Crew crew) throws IonaException {
         MyHttpStatus status = MyHttpStatus.OK;
         String msg = MyHttpStatus.REGISTER_SUCCESS.getReasonPhrase();
 
@@ -95,7 +96,7 @@ public class CrewController {
         }
 
         //注册通知
-        noticeService.registerNotice(crew.getId());
+        noticeService.produceNotice(crew.getId(), Notice.NoticeType.REGISTER,0, 0);
 
         CrewResponse result = new CrewResponse(status);
         return result;

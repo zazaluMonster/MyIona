@@ -72,4 +72,32 @@ public class FollowService implements IFollowService {
             return follows.get(0);
         }
     }
+
+    @Override
+    public List<Follow> getFollowers(int crewId) {
+        Follow follow = new Follow();
+        follow.setFollowingId(crewId);
+        Map<String,Object> condition = new HashMap<>();
+        condition.put("item",follow);
+        List<Follow> follows =  followDao.selects(condition);
+        if(follows == null || follows.size() <= 0){
+            return null;
+        }else{
+            return follows;
+        }
+    }
+
+    @Override
+    public List<Follow> getFollowingList(int crewId) {
+        Follow follow = new Follow();
+        follow.setFollowerId(crewId);
+        Map<String,Object> condition = new HashMap<>();
+        condition.put("item",follow);
+        List<Follow> follows =  followDao.selects(condition);
+        if(follows == null || follows.size() <= 0){
+            return null;
+        }else{
+            return follows;
+        }
+    }
 }

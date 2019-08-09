@@ -7,9 +7,11 @@ import iona.modelView.LikeResponse;
 import iona.pojo.Crew;
 import iona.pojo.Follow;
 import iona.pojo.Like;
+import iona.pojo.Notice;
 import iona.service.ICrewService;
 import iona.service.IFollowService;
 import iona.service.ILikeService;
+import iona.service.INoticeService;
 import iona.util.DateUtil;
 import iona.util.MyHttpStatus;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +36,8 @@ public class LikeController {
     @Autowired
     private ILikeService likeService;
     @Autowired
+    private INoticeService noticeService;
+    @Autowired
     RunnerQueue runnerQueue;
     @Autowired
     ApplicationContext applicationContext;
@@ -42,7 +46,7 @@ public class LikeController {
      * 喜欢
      */
     @RequestMapping(value = "/doLike", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public LikeResponse doLike(@RequestBody Like like) {
+    public LikeResponse doLike(@RequestBody Like like) throws IonaException {
         MyHttpStatus status = MyHttpStatus.OK;
 
         List<Like> likes = new ArrayList<>();
@@ -50,6 +54,9 @@ public class LikeController {
         likeService.inserts(likes);
 
         LikeResponse result = new LikeResponse(status);
+
+        noticeService.produceNotice(like.getMessageCreator() , Notice.NoticeType.LIKE,like.getMessageId(), 0);
+
         return result;
     }
 

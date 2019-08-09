@@ -15,6 +15,8 @@ public class Like implements Serializable {
     private int likerId;
     private int messageId;
 
+    private int messageCreator;
+
     public int getId() {
         return id;
     }
@@ -37,5 +39,13 @@ public class Like implements Serializable {
 
     public void setMessageId(int messageId) {
         this.messageId = messageId;
+    }
+
+    public int getMessageCreator() {
+        return messageCreator;
+    }
+
+    public void setMessageCreator(int messageCreator) {
+        this.messageCreator = messageCreator;
     }
 }

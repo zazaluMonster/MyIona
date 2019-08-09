@@ -1,6 +1,7 @@
 package iona.controller;
 
 import iona.async.RunnerQueue;
+import iona.exception.IonaException;
 import iona.modelView.NoticeResponse;
 import iona.pojo.Notice;
 import iona.service.INoticeService;
@@ -38,6 +39,19 @@ public class NoticeController {
         List<Notice> notices = noticeService.getCurUserNewNotice(notice.getNotifierId());
 
         NoticeResponse result = new NoticeResponse(status,notices);
+        return result;
+    }
+
+    /**
+     * 更新为已读
+     */
+    @RequestMapping(value = "/readNotice", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public NoticeResponse readNotice(@RequestBody Notice notice) throws IonaException {
+        MyHttpStatus status = MyHttpStatus.OK;
+
+        noticeService.readNotice(notice.getId());
+
+        NoticeResponse result = new NoticeResponse(status);
         return result;
     }
 }

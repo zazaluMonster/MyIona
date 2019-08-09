@@ -18,6 +18,17 @@ public class Notice implements Serializable {
     private String createTime;
     private int isRead;
 
+    /**
+     * 注册类型
+     */
+    public static class NoticeType{
+        public static final int REGISTER = 1;
+        public static final int COMMENT = 2;
+        public static final int FOLLOW = 3;
+        public static final int LIKE = 4;
+        public static final int NEW_MESSAGE = 5;
+    }
+
     public int getId() {
         return id;
     }

@@ -36,6 +36,14 @@ public class ContantsContext {
 
     //通知消息模板
     public static String FIRST_REGISTER = "感谢注册,赶紧上传自己心仪的头像吧";
-    public static String FIRST_REGISTER_URL = CONTEXT_PATH + "/main/userData";
+    public static String COMMENT = "有人回复了您,快去查看吧";
+    public static String FOLLOW = "有人关注了您,快去查看吧";
+    public static String LIKE = "有人喜欢了您的伊文,快去查看吧";
+    public static String NEW_MESSAGE_PREFIX = "发表了新的伊文,快去查看吧";
+    public static String FIRST_REGISTER_URL;
+    public static String COMMENT_PREFIX_URL;
+    public static String FOLLOW_PREFIX_URL;
+    public static String LIKE_PREFIX_URL;
+    public static String NEW_MESSAGE_PREFIX_URL;
 
 }

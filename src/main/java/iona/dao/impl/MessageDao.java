@@ -3,6 +3,7 @@ package iona.dao.impl;
 import iona.dao.IMessageDao;
 import iona.mapper.MessageMapper;
 import iona.pojo.Message;
+import iona.pojo.Pager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -47,8 +48,14 @@ public class MessageDao extends AbstractDao implements IMessageDao {
     }
 
     @Override
-    public List<Message> getFollowingMessage(int id) {
-        return messageMapper.getFollowingMessage(id);
+    public List<Message> selects(Map<String, Object> condition,Pager pager) {
+        condition.put("pager",pager);
+        return messageMapper.selects(condition);
+    }
+
+    @Override
+    public List<Message> getFollowingMessage(int id, Pager pager) {
+        return messageMapper.getFollowingMessage(id,pager);
     }
 
     @Override

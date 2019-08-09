@@ -31,6 +31,7 @@ public class IonaExceptionHandler {
     @ExceptionHandler(IOException.class)
     @ResponseBody
     public GeneralResponse errorHandlerIO(Exception e) {
+        e.printStackTrace();
         return new GeneralResponse(MyHttpStatus.IO_ERROR);
     }
 }

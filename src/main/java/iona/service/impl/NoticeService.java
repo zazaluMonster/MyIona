@@ -3,8 +3,14 @@ package iona.service.impl;
 import iona.async.RunnerQueue;
 import iona.async.asyncRunner.ProduceNoticeRunner;
 import iona.config.ContantsContext;
+import iona.dao.ICrewDao;
 import iona.dao.INoticeDao;
+import iona.exception.IonaException;
+import iona.logger.IonaLogger;
+import iona.pojo.Crew;
+import iona.pojo.Message;
 import iona.pojo.Notice;
+import iona.service.ICrewService;
 import iona.service.INoticeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -19,6 +25,8 @@ public class NoticeService implements INoticeService {
 
     @Autowired
     private INoticeDao noticeDao;
+    @Autowired
+    private ICrewService crewService;
     @Autowired
     RunnerQueue runnerQueue;
     @Autowired
@@ -55,11 +63,45 @@ public class NoticeService implements INoticeService {
     }
 
     @Override
-    public void registerNotice(int crewId) {
-        String content = ContantsContext.FIRST_REGISTER;
-        String url = ContantsContext.FIRST_REGISTER_URL;
+    public void produceNotice(int crewId, int noticeType, int messageId, int followerId) throws IonaException {
 
-        ProduceNoticeRunner produceNoticeRunner = applicationContext.getBean(ProduceNoticeRunner.class, crewId, content, url);
+        String content = "";
+        String url = "";
+        int notifierId = crewId;
+
+        Crew crew = crewService.getById(crewId);
+
+        switch (noticeType){
+            case Notice.NoticeType.REGISTER: {
+                content = ContantsContext.FIRST_REGISTER;
+                url = ContantsContext.FIRST_REGISTER_URL;
+                break;
+            }
+            case Notice.NoticeType.COMMENT: {
+                content = ContantsContext.COMMENT;
+                url =  ContantsContext.COMMENT_PREFIX_URL + "/" + messageId;
+                break;
+            }
+            case Notice.NoticeType.FOLLOW: {
+                content = ContantsContext.FOLLOW;
+                url =  ContantsContext.FOLLOW_PREFIX_URL + "/" + followerId;
+                break;
+            }
+            case Notice.NoticeType.LIKE: {
+                content = ContantsContext.LIKE;
+                url =  ContantsContext.LIKE_PREFIX_URL + "/" + messageId;
+                break;
+            }
+            case Notice.NoticeType.NEW_MESSAGE: {
+                content = "*" + crew.getCrewName() + "* " +ContantsContext.NEW_MESSAGE_PREFIX;
+                url =  ContantsContext.NEW_MESSAGE_PREFIX_URL + "/" + messageId;
+            }
+            default: {
+                throw new IonaException("注册通知异常");
+            }
+        }
+
+        ProduceNoticeRunner produceNoticeRunner = applicationContext.getBean(ProduceNoticeRunner.class, notifierId, content, url);
         runnerQueue.addNewRunner(produceNoticeRunner);
     }
 
@@ -75,4 +117,28 @@ public class NoticeService implements INoticeService {
         return noticeDao.selects(condition);
     }
 
+    @Override
+    public void readNotice(int id) throws IonaException {
+        Notice notice = getById(id);
+        notice.setIsRead(ContantsContext.I_TRUE);
+        update(notice);
+    }
+
+    @Override
+    public Notice getById(int id) throws IonaException {
+        Notice notice = new Notice();
+        notice.setId(id);
+
+        Map<String,Object> condition = new HashMap<>();
+        condition.put("item",notice);
+
+        List<Notice> notices =  noticeDao.selects(condition);
+        if(notices == null || notices.size() <= 0){
+            return null;
+        }else if(notices.size() > 1){
+            throw new IonaException();
+        }else{
+            return notices.get(0);
+        }
+    }
 }

@@ -35,5 +35,10 @@ public class IonaInitRunner implements CommandLineRunner {
         ContantsContext.BASE_URL = baseURl;
         ContantsContext.PAGER_SIZE = pageSize;
         ContantsContext.CONTEXT_PATH = contextPath;
+        ContantsContext.FIRST_REGISTER_URL = ContantsContext.CONTEXT_PATH + "/main/userData";
+        ContantsContext.COMMENT_PREFIX_URL = ContantsContext.CONTEXT_PATH + "/main/messageDetail";
+        ContantsContext.FOLLOW_PREFIX_URL = ContantsContext.CONTEXT_PATH + "/main/userCard";
+        ContantsContext.LIKE_PREFIX_URL = ContantsContext.CONTEXT_PATH + "/main/messageDetail";
+        ContantsContext.NEW_MESSAGE_PREFIX_URL = ContantsContext.CONTEXT_PATH + "/main/messageDetail";
     }
 }

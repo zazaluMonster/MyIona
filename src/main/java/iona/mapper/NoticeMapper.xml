@@ -88,17 +88,17 @@
 			<if test="notifierId > 0">
 				notifierId = #{notifierId,jdbcType=NUMERIC},
 			</if>
-			<if test="item.content != null and item.content != ''">
-				content = #{item.content,jdbcType=VARCHAR},
+			<if test="content != null and content != ''">
+				content = #{content,jdbcType=VARCHAR},
 			</if>
-			<if test="item.url != null and item.url != ''">
-				url = #{item.url,jdbcType=VARCHAR},
+			<if test="url != null and url != ''">
+				url = #{url,jdbcType=VARCHAR},
 			</if>
-			<if test="item.createTime != null and item.createTime != ''">
-				createTime = #{item.createTime,jdbcType=VARCHAR},
+			<if test="createTime != null and createTime != ''">
+				createTime = #{createTime,jdbcType=VARCHAR},
 			</if>
-		    <if test="item.isRead != null">
-				isRead = #{item.isRead,jdbcType=NUMERIC},
+		    <if test="isRead != null">
+				isRead = #{isRead,jdbcType=NUMERIC},
 			</if>
 		</trim>
 		where id = #{id}
@@ -109,8 +109,8 @@
 		<foreach collection="items" item="item" open="" close="" separator=";">
 			update NOTICE set
 			<trim prefix="" suffixOverrides=",">
-				<if test="notifierId > 0">
-					notifierId = #{notifierId,jdbcType=NUMERIC},
+				<if test="item.notifierId > 0">
+					notifierId = #{item.notifierId,jdbcType=NUMERIC},
 				</if>
 				<if test="item.content != null and item.content != ''">
 					content = #{item.content,jdbcType=VARCHAR},

@@ -8,6 +8,7 @@ import iona.logger.IonaLogger;
 import iona.pojo.Crew;
 import iona.pojo.Follow;
 import iona.pojo.Message;
+import iona.pojo.Pager;
 import iona.service.ICrewService;
 import iona.service.IMessageService;
 import iona.util.DateUtil;
@@ -94,22 +95,22 @@ public class MessageService implements IMessageService {
         message.setCurUserId(curLoginUserId);
         Map<String,Object> condition = new HashMap<>();
         condition.put("item",message);
-        condition.put("OrRetweetorIdIsMy",curLoginUserId);
+        condition.put("OrRetweetorIdIsMy",curUserCardId);
         return messageDao.selects(condition);
     }
 
     @Override
-    public List<Message> getMessageRandom(int curUserId) {
+    public List<Message> getMessageRandom(int curUserId, Pager pager) throws IonaException {
         Message message = new Message();
         message.setCurUserId(curUserId);
         Map<String,Object> condition = new HashMap<>();
         condition.put("item",message);
-        return messageDao.selects(condition);
+        return messageDao.selects(condition,pager);
     }
 
     @Override
-    public List<Message> getFollowingMessage(int curLoginUserId) {
-        return messageDao.getFollowingMessage(curLoginUserId);
+    public List<Message> getFollowingMessage(int curLoginUserId, Pager pager) {
+        return messageDao.getFollowingMessage(curLoginUserId,pager);
     }
 
     @Override

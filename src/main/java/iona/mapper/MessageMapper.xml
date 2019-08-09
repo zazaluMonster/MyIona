@@ -100,6 +100,7 @@
 			</if>
 		</trim>
 		order by m.createTime desc
+		<include refid="iona.mapper.BaseMapper.pager"/>
 	</select>
 
 	<insert id="inserts" useGeneratedKeys="true" keyProperty="id">
@@ -256,6 +257,7 @@
 # 		where m.creator in (${id}, (select followingId from FOLLOW where followerId = ${id}))
 		where m.creator in ((select followingId from FOLLOW where followerId = ${id}))
 		order by m.createTime desc
+		<include refid="iona.mapper.BaseMapper.pager"/>
 	</select>
 
 	<select id="getMessageByIdAndCurUserId" resultMap="messageResultMap">
