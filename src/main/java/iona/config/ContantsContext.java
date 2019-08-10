@@ -19,7 +19,8 @@ public class ContantsContext {
     public static String ZERO = "0";
 
     //Websocket相关
-    //webSocket相关配置
+
+    //webSocket相关配置(带一定说明的)
     //链接地址
     public static String WEBSOCKETPATHPERFIX = "/ws-push";
     public static String WEBSOCKETPATH = "/sockJsEndPoint";
@@ -34,6 +35,13 @@ public class ContantsContext {
     //点对点消息推送地址后缀,最后的地址为/user/用户识别码/msg
     public static final String P2PPUSHPATH = "/msg";
 
+    //在线聊天室的Websocket相关配置
+    public static final String WEBSOCKET_CHAT_ROOM_SERVER_PATH = "/chat";
+    public static final String WEBSOCKET_CHAT_ROOM_PRODUCE_PATH = "/topic/chatResponse";
+    public static final String CACHE_ONLINE_USER_KEY = "_curChatOnlineUser_";
+
+
+
     //通知消息模板
     public static String FIRST_REGISTER = "感谢注册,赶紧上传自己心仪的头像吧";
     public static String COMMENT = "有人回复了您,快去查看吧";
@@ -45,5 +53,7 @@ public class ContantsContext {
     public static String FOLLOW_PREFIX_URL;
     public static String LIKE_PREFIX_URL;
     public static String NEW_MESSAGE_PREFIX_URL;
+
+
 
 }

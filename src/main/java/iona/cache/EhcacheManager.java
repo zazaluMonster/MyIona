@@ -58,7 +58,7 @@ public class EhcacheManager {
      * 根据key移除缓存
      * @param key
      */
-    @CacheEvict
+    @CacheEvict(key = "#key")
     public void removeCache(String key) {
         IonaLogger.info("正在清除key=" + key + "的缓存");
     }

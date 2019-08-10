@@ -30,13 +30,13 @@
 				<if test="item.id > 0">
 					AND id = #{item.id,jdbcType=NUMERIC}
 				</if>
-				<if test="item.followerId != null">
+				<if test="item.followerId > 0">
 					AND followerId = #{item.followerId,jdbcType=NUMERIC}
 				</if>
 				<if test="item.followerName != null and item.followerName != ''">
 					AND followerName = #{item.followerName,jdbcType=VARCHAR}
 				</if>
-				<if test="item.followingId != null">
+				<if test="item.followingId > 0">
 					AND followingId = #{item.followingId,jdbcType=NUMERIC}
 				</if>
 				<if test="item.followingName != null and item.followingName != ''">
@@ -108,13 +108,13 @@
 		<foreach collection="items" item="item" open="" close="" separator=";">
 			update FOLLOW set
 			<trim prefix="" suffixOverrides=",">
-				<if test="item.followerId != null">
+				<if test="item.followerId > 0">
 					followerId = #{item.followerId,jdbcType=NUMERIC},
 				</if>
 				<if test="item.followerName != null and item.followerName != ''">
 					followerName = #{item.followerName,jdbcType=VARCHAR},
 				</if>
-				<if test="item.followingId != null">
+				<if test="item.followingId > 0">
 					followingId = #{item.followingId,jdbcType=NUMERIC},
 				</if>
 				<if test="item.followingName != null and item.followingName != ''">

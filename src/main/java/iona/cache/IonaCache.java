@@ -18,8 +18,10 @@ public class IonaCache {
      */
     public boolean addCache(String key,String value){
         String result = ehcacheManager.addCache(key,value);
+        //空字符串或者null的,则移除
         if(StringUtils.isEmpty(result)){
-            throw new RuntimeException("Iona: 添加缓存异常");
+            ehcacheManager.removeCache(key);
+            return true;
         }else{
             return true;
         }

@@ -2,6 +2,8 @@ CREATE DATABASE MyIona;
 
 USE MyIona;
 
+
+
 create table CREW
 (
     id              int auto_increment comment '船员id',
