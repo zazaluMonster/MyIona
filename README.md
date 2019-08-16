@@ -1,5 +1,7 @@
 # MyIona
 
+<a title="Hits" target="_blank" href="https://github.com/b3log/hits"><img src="https://hits.b3log.org/myionavue/hits.svg"></a>
+
 这是我业余时间写好的JavaWeb项目, 一个简单的微博系统, 可以发博,点赞,转发,评论,同时拥有在线聊天,实时通知系统
 
 详细的项目说明可以见,[在线项目说明](http://47.111.146.215:8080/MyIona/tos?_blank)
