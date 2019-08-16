@@ -1,0 +1,6 @@
+INSERT INTO MyIona.CREW (  crewName, phoneNum, mail, crewMessage, avatarUrl, passwordMd5, lastOfflineTime, createTime, filed1) VALUES ('zazalu', '18767578219', 'zazalu@gmail.com', '全站官方指定唯一管理员', 'avatar_zazalu.png', 'c48c1d31338186e9a093989722212bcd', null, '201908161520', null);
+INSERT INTO MyIona.CREW (  crewName, phoneNum, mail, crewMessage, avatarUrl, passwordMd5, lastOfflineTime, createTime, filed1) VALUES ('iona', '18767578218', 'iona@gmail.com', '全站官方指定唯一客服', 'avatar_iona.png', 'c48c1d31338186e9a093989722212bcd', null, '201908161520', null);
+INSERT INTO MyIona.MESSAGE (  html, createTime, creator, retweetorId, retweetTime, retweetMessageId) VALUES ('<p>大家好,我是本站管理员,感谢大家对本站的支持</p>', '201908161521', 1, 0, null, null);
+INSERT INTO MyIona.MESSAGE (  html, createTime, creator, retweetorId, retweetTime, retweetMessageId) VALUES ('<p>大家好,我是本站唯一客服,有什么问题,可以在此贴下回复</p>', '201908161523', 2, 0, null, null);
+INSERT INTO MyIona.NOTICE (  notifierId, content, createTime, url, isRead) VALUES (1, '感谢注册,赶紧上传自己心仪的头像吧', '201908161520', '/MyIona/main/userData', 1);
+INSERT INTO MyIona.NOTICE (  notifierId, content, createTime, url, isRead) VALUES (2, '感谢注册,赶紧上传自己心仪的头像吧', '201908161520', '/MyIona/main/userData', 1);
