@@ -36,6 +36,7 @@ public class Message implements Serializable {
 
     //评论
     private String commentNums;
+    private String viewsNums;//存在redis中
 
 
     public String getCommentNums() {
@@ -228,5 +229,13 @@ public class Message implements Serializable {
 
     public void setMail(String mail) {
         this.mail = mail;
+    }
+
+    public String getViewsNums() {
+        return viewsNums;
+    }
+
+    public void setViewsNums(String viewsNums) {
+        this.viewsNums = viewsNums;
     }
 }

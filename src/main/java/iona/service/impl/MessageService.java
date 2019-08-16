@@ -1,18 +1,13 @@
 package iona.service.impl;
 
-import iona.cache.IonaCache;
-import iona.dao.ICrewDao;
+import iona.cache.ValueIonaRedisCache;
 import iona.dao.IMessageDao;
 import iona.exception.IonaException;
 import iona.logger.IonaLogger;
-import iona.pojo.Crew;
-import iona.pojo.Follow;
 import iona.pojo.Message;
 import iona.pojo.Pager;
-import iona.service.ICrewService;
 import iona.service.IMessageService;
 import iona.util.DateUtil;
-import iona.util.TokenUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -26,7 +21,7 @@ public class MessageService implements IMessageService {
     @Autowired
     private IMessageDao messageDao;
     @Autowired
-    private IonaCache ionaCache;
+    private ValueIonaRedisCache redisCache;
 
     @Override
     public void inserts(List<Message> items) {
@@ -153,5 +148,23 @@ public class MessageService implements IMessageService {
     @Override
     public Message getMessageByIdAndCurUserId(int id, int curUserId) {
         return messageDao.getMessageByIdAndCurUserId(id,curUserId);
+    }
+
+    @Override
+    public int getMessageViewNumsByRedis(int messageId, int curUserId) {
+
+        String isCurUserViewsThisMessageKey = "user:" + curUserId + ":already:views:" + messageId;
+        String viewNumsKey = "message:" + messageId + ":viewNums";
+
+        Boolean isCurUserViewsThisMessage = (Boolean) redisCache.get(isCurUserViewsThisMessageKey);
+
+        if(isCurUserViewsThisMessage != null && isCurUserViewsThisMessage){
+            IonaLogger.info("当前用户已经阅读过此博文,故计数器不+1");
+        }else{
+            redisCache.set(isCurUserViewsThisMessageKey,true);
+            redisCache.incr(viewNumsKey);
+        }
+
+        return redisCache.getNums(viewNumsKey);
     }
 }

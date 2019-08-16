@@ -1,7 +1,6 @@
 package iona.config;
 
 import iona.Interceptor.AuthenticationInterceptor;
-import iona.cache.IonaCache;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

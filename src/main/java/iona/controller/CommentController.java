@@ -3,7 +3,6 @@ package iona.controller;
 import iona.async.RunnerQueue;
 import iona.exception.IonaException;
 import iona.modelView.CommentResponse;
-import iona.modelView.CrewResponse;
 import iona.pojo.Comment;
 import iona.pojo.Notice;
 import iona.service.ICommentService;
@@ -53,7 +52,7 @@ public class CommentController {
      * 根据MessageId获取回复list
      */
     @RequestMapping(value = "/commentList", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public CommentResponse commentList(@RequestBody Comment comment) throws IonaException {
+    public CommentResponse commentList(@RequestBody Comment comment){
         MyHttpStatus status = MyHttpStatus.OK;
 
         List<Comment> comments = commentService.getMessageComment(comment.getMessageId());

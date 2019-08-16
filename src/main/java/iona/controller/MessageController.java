@@ -148,9 +148,13 @@ public class MessageController {
 
         Message hit = messageService.getMessageByIdAndCurUserId(message.getId(), message.getCurUserId());
 
+        int viewNums = messageService.getMessageViewNumsByRedis(message.getId(), message.getCurUserId());
+
         if (hit == null) {
             return new MessageResponse(MyHttpStatus.MESSAGE_404);
         }
+
+        hit.setViewsNums(String.valueOf(viewNums));
 
         MessageResponse result = new MessageResponse(status, hit);
         return result;

@@ -19,4 +19,5 @@ public interface IMessageService extends BaseService<Message> {
     List<Message> getFollowingMessage(int curUserId, Pager pager);
     Message getByRetweetorIdAndRetweetMessageId(int retweetorId, int retweetMessageId) throws IonaException;
     Message getMessageByIdAndCurUserId(int id,int curUserId);
+    int getMessageViewNumsByRedis(int messageId,int curUserId);
 }

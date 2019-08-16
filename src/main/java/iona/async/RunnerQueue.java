@@ -1,8 +1,6 @@
 package iona.async;
 
-import iona.async.asyncRunner.AsyncRunner;
 import iona.async.asyncRunner.BaseRunner;
-import iona.exception.IonaException;
 import iona.logger.IonaLogger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -12,7 +10,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 /**
- * 一个简单的消息队列，可以接受asyncRunner，并按照先进先出的规则，一个个执行这些异步任务
+ * 一个简单的消息队列，可以接受asyncRunner，先进先出
  *
  * 如果你有些与主线程无关的业务逻辑，比如一些简单的log记录等，就可以交给本消息队列，慢慢处理
  *
