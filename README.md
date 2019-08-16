@@ -4,6 +4,45 @@
 
 详细的项目说明可以见,[在线项目说明](http://47.111.146.215:8080/MyIona/tos?_blank)
 
+本项目已经部署在阿里云,[项目地址](http://47.111.146.215:8080/MyIona)
+
+# 项目效果图
+
+## 登录页
+
+<img src="img/login.png">
+
+## 注册页
+
+<img src="img/register.png">
+
+## 忘记密码
+
+<img src="img/password_forget.png">
+
+## 首页
+
+<img src="img/main.png">
+
+## 博文详情
+
+<img src="img/message_detail.png">
+
+##　回复博文
+
+<img src="img/messgae_reply.png">
+
+## 个人信息浏览
+
+<img src="img/user.png">
+
+## 头像修改
+
+<img src="img/avatar_change.png">
+
+## 聊天室
+
+<img src="img/chat_room.png">
 
 
 # 部署步骤
