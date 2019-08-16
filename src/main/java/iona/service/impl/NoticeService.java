@@ -95,6 +95,7 @@ public class NoticeService implements INoticeService {
             case Notice.NoticeType.NEW_MESSAGE: {
                 content = "*" + crew.getCrewName() + "* " +ContantsContext.NEW_MESSAGE_PREFIX;
                 url =  ContantsContext.NEW_MESSAGE_PREFIX_URL + "/" + messageId;
+                break;
             }
             default: {
                 throw new IonaException("注册通知异常");
