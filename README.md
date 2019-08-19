@@ -59,9 +59,11 @@
 
 2. 导入本项目到您本地的IDE工具中，推荐IDEA
 
-3. 使用IDE工具重新编译
+3. 根据自身情况选择在`application.properties`中调整开发模式还是生产模式, `spring.profiles.active`属性进行控制
 
-4. 使用maven的package指令打包,默认的,会在target/下得到my-iona-0.0.1-SNAPSHOT.jar文件, 即新的jar包
+4. 使用IDE工具重新编译
+
+5. 使用maven的package指令打包,默认的,会在target/下得到my-iona-0.0.1-SNAPSHOT.jar文件, 即新的jar包(若package指令报错,应该是你没有搭建并运行本地的redis, 因为本项目使用了redis,springBoot启动的时候会进行连接测试, 可以查看本手册的第7部分查看部署redis方式, [redis部署](#7-Redis部署))
 
 如果你想更改前端内容, 请前往[MyIona-Vue](https://github.com/zazaluMonster/MyIona-Vue)项目查看并按照说明进行修改,最后导出dist文件夹内容复制到resource/static目录下即可
 
