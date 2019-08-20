@@ -46,6 +46,9 @@
 
 <img src="img/chat_room.png">
 
+# 项目流程图
+
+<img src="img/MyIona.jpg" />
 
 # 部署步骤
 

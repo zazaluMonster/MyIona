@@ -8,7 +8,6 @@ import iona.modelView.RequestModel.MessageRequest;
 import iona.pojo.Follow;
 import iona.pojo.Message;
 import iona.pojo.Notice;
-import iona.pojo.Pager;
 import iona.service.IFollowService;
 import iona.service.IMessageService;
 import iona.service.INoticeService;
