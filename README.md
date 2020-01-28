@@ -80,13 +80,15 @@
 
 如果你想更改前端内容, 请前往[MyIona-Vue](https://github.com/zazaluMonster/MyIona-Vue)项目查看并按照说明进行修改,最后导出dist文件夹内容复制到resource/static目录下即可
 
+**如果不希望package命令自动运行test(会使得数据库连接开启, 如果数据库配置不正确, 会导致打包失败), 使用-Dmaven.test.skip=true**
+
 ## 3 准备一台云服务器
 
 1. 准备一台云服务器, 比如我是用的腾讯云
 
 2. 节点选择离自己最近的位置
 
-3. 系统镜像推荐选择CentOS，不过我为了和本地开发环境一致防止出现一些小问题，选择的是Ubuntu18.04
+3. 系统镜像推荐选择CentOS, 或者Ubuntu
 
 购买完成后，我们必须做一些基本的配置
 
