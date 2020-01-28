@@ -4,13 +4,9 @@
 
 这是我业余时间写好的JavaWeb项目, 一个简单的微博系统, 可以发博,点赞,转发,评论,同时拥有在线聊天,实时通知系统
 
-详细的项目说明可以见,[在线项目说明](http://47.111.146.215:8080/MyIona/tos?_blank)
+详细的项目说明可以见,[在线项目说明](http://122.51.203.117:8080/MyIona/tos?_blank)
 
-本项目已经部署在阿里云,[项目地址](http://47.111.146.215:8080/MyIona)
-
-# 近期任务
-
-将此手册步骤记录改为基于腾讯云
+本项目已经部署在阿里云,[项目地址](http://122.51.203.117:8080/MyIona/)
 
 # 项目效果图
 
@@ -56,11 +52,21 @@
 
 # 部署步骤
 
+## 0 修改项目各类配置
+
+当没有正式域名的时候，使用固定IP是种临时有效简单的方式，不过也会引发一定的问题，那就是迁移的时候，需要在手动修改以下配置才行
+
+本项目目前在迁移项目时，可能需要修改的配置有： 1. application.properties的iona.baseurl 2. 前端vue项目propertis.js的BASEURL 3. 其他你搜索到的写死IP的地方
+
 ## 1 准备SpringBoot可执行jar包
 
 可以直接下载war/my-iona-0.0.1-prod.jar
 
-或者自己从源代码构建新的jar包,步骤如下：
+或者自己从源代码构建新的jar包
+
+如果有修改过配置，则请务必重新构建一下jar包
+
+步骤如下：
 
 1. git clone
 
@@ -70,11 +76,9 @@
 
 4. 使用IDE工具重新编译
 
-5. 使用maven的package指令打包,默认的,会在target/下得到my-iona-0.0.1-SNAPSHOT.jar文件, 即新的jar包(若package指令报错,应该是你没有搭建并运行本地的redis, 因为本项目使用了redis,springBoot启动的时候会进行连接测试, 可以查看本手册的第7部分查看部署redis方式, [redis部署](#7-Redis部署))
+5. 依次使用maven的clean,compile,package指令打包,默认的,会在target/下得到my-iona-0.0.1-SNAPSHOT.jar文件, 即新的jar包(若package指令报错,应该是你没有搭建并运行本地的redis, 因为本项目使用了redis,springBoot启动的时候会进行连接测试, 可以查看本手册的第7部分查看部署redis方式, [redis部署](#7-Redis部署))
 
 如果你想更改前端内容, 请前往[MyIona-Vue](https://github.com/zazaluMonster/MyIona-Vue)项目查看并按照说明进行修改,最后导出dist文件夹内容复制到resource/static目录下即可
-
-**[注意]**: 我已经帮你们准备好了两种jar包,一个是my-iona-0.0.1-dev.jar,这是测试环境使用的, 适合本地跑. 另一个是my-iona-0.0.1-prod.jar, 这是生产环境使用的(生产环境ip变动则此jar包无效,请自行重新编译). 
 
 ## 3 准备一台云服务器
 
@@ -88,9 +92,9 @@
 
 1. 设置root密码或者密钥
 
-2. 使用ssh工具测试是否能连接
+2. 使用ssh工具测试是否能连接（先检查云服务器22端口是否正常）
 
-3. 添加防火墙设置，将8080端口放行
+3. 添加防火墙设置，将8080端口放行，保证80,443端口正常
 
 ## 4 登录我们的云服务器并上传jar包
 
@@ -102,13 +106,27 @@
 
 ## 5 安装jdk或者jre
 
-如果你比较懒！那么请和我一样使用apt安装java，它会帮我们自动完成java_home等一些环境变量的创建
+先使用`java -version`查看是否已经安装java
+
+如果确定没有, 可以去官网下载, 或者使用包管理工具安装
+
+如果你比较懒！那么请和我一样使用包管理工具安装java，它会帮我们自动完成java_home等一些环境变量的创建
+
+### ubuntu用户
 
 1. 执行`ssh root@云服务器公网ip地址`登录我们的云服务器终端
 
 2. 执行`sudo apt update`，将更新apt，若不更新可能会在安装java包的时候出错
 
 3. 执行`sudo apt install openjdk-8-jdk`，由于java8后都是收费的，为了减少不必要的麻烦，我们安装openjdk即可，目前来看两者没有什么区别
+
+### centos用户
+
+1. `yum update`先做下更新
+
+2. `yum list java-1.8*` 使用此命令来列举所有目前yum上可以安装的java1.8版本包
+
+3. 随后请自己挑一个包安装, `yum install -y java-1.8.0-openjdk*` -y的意思是永远回答yes 
 
 ## 6 mysql环境部署
 
@@ -117,6 +135,8 @@ mysql环境部署
 1. 安装mysql8.x
 https://zazalu.space/2019/06/14/ubuntu18-04%E5%AE%89%E8%A3%85mysql8-0-16-Community/
 
+**CentOs安装**: https://dev.mysql.com/doc/refman/8.0/en/linux-installation-yum-repo.html
+
 2. 创建一个zazalu的mysql用户，由于我的数据库配置中使用了zazalu用户进行登录，所以需要创建一个叫zazalu的用户
 
 ```
@@ -124,7 +144,7 @@ https://zazalu.space/2019/06/14/ubuntu18-04%E5%AE%89%E8%A3%85mysql8-0-16-Communi
 mysql -u root -p 
 
 2) 在mysql交互界面使用如下面指令创建zazalu用户，并给予它所有权限
-create user 'zazalu'@'localhost' identified by '!密码!'
+create user 'zazalu'@'localhost' identified by '!密码!';
 GRANT ALL ON *.* TO 'zazalu'@'localhost';
 
 ```
@@ -140,8 +160,8 @@ mysql>source /path/MyBelfast.sql
 ## 7 Redis部署
 
 > 安装redis
-1. 下载redis最新压缩包
-`wget http://download.redis.io/releases/redis-5.0.5.tar.gz`
+1. 下载redis压缩包
+`wget http://download.redis.io/releases/redis-5.0.5.tar.gz` (目前我看最新的是5.0.7, 请自行根据所需下载指定版本)
 
 2. 解压缩
 `tar xzf redis-5.0.5.tar.gz`
@@ -174,10 +194,10 @@ source ~/.bashrc
 
 6. 修改配置文件
 
-进入redis/src, 打开redis.conf文件
+进入redis/, 打开redis.conf文件
 
 修改`timeout`从0修改到30
-修改`deamonize`从no改为yes, 这样就可以守护线程启动
+修改`daemonize`从no改为yes, 这样就可以守护线程启动
 
 7. 启动redis
 
