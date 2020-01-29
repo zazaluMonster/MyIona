@@ -82,6 +82,9 @@
 
 **如果不希望package命令自动运行test(会使得数据库连接开启, 如果数据库配置不正确, 会导致打包失败), 使用-Dmaven.test.skip=true**
 
+`mvn -Dmaven.test.skip=true package`
+
+
 ## 3 准备一台云服务器
 
 1. 准备一台云服务器, 比如我是用的腾讯云
@@ -241,3 +244,7 @@ nohup java -jar /path/to/my-iona-0.0.1-prod.jar >spring-boot-log/my-iona-0.0.1-p
 4. 启动项目查看其他报错，并依次解决
 
 5. vue的东西全部放在static/文件夹下即可
+
+# 近期任务
+
+由于iview经常遇到问题, 而且我搭建的前端项目在ie11下无法正常使用, 问题很难追踪, 所以打算重新搭建, 使用element试一试
