@@ -247,4 +247,6 @@ nohup java -jar /path/to/my-iona-0.0.1-prod.jar >spring-boot-log/my-iona-0.0.1-p
 
 # 近期任务
 
-由于iview经常遇到问题, 而且我搭建的前端项目在ie11下无法正常使用, 问题很难追踪, 所以打算重新搭建, 使用element试一试
+1. 由于iview经常遇到问题, 而且我搭建的前端项目在ie11下无法正常使用, 问题很难追踪, 所以打算重新搭建, 使用element试一试 [参考此项目](https://github.com/lin-xin/vue-manage-system)
+
+2. 使用module
